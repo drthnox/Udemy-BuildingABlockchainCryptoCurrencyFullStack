@@ -35,7 +35,7 @@ describe('Block', () => {
     const lastBlock = Block.genesis();
     const data = 'mined-data';
     const minedBlock = Block.mineBlock({ lastBlock, data });
-    console.log('minedBlock',minedBlock);
+    console.log('minedBlock', minedBlock);
 
     it('returns a Block instance', () => {
       expect(minedBlock instanceof Block).toBe(true);
@@ -48,6 +48,14 @@ describe('Block', () => {
     it('sets the `timestamp`', () => {
       expect(minedBlock.timestamp).not.toEqual(undefined);
     });
+
+    // it('sets the `hash`', () => {
+
+    // });
   });
+
+  // describe('generateHash()', () => {
+
+  // });
 
 });
