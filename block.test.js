@@ -19,15 +19,34 @@ describe('Block', () => {
   describe('genesis()', () => {
     const genesisBlock = Block.genesis();
 
-    it('genesis block should be a Block type', ()=> {
+    it('genesis block should be a Block type', () => {
       expect(genesisBlock instanceof Block).toBe(true);
     });
 
-    it('genesis block should contain default data', ()=> {
+    it('genesis block should contain default data', () => {
       expect(genesisBlock.data).toEqual(GENESIS_BLOCK_DATA.data);
       expect(genesisBlock.timestamp).toEqual(GENESIS_BLOCK_DATA.timestamp);
       expect(genesisBlock.hash).toEqual(GENESIS_BLOCK_DATA.hash);
       expect(genesisBlock.lastHash).toEqual(GENESIS_BLOCK_DATA.lastHash);
+    });
+  });
+
+  describe('mineBlock()', () => {
+    const lastBlock = Block.genesis();
+    const data = 'mined-data';
+    const minedBlock = Block.mineBlock({ lastBlock, data });
+    console.log('minedBlock',minedBlock);
+
+    it('returns a Block instance', () => {
+      expect(minedBlock instanceof Block).toBe(true);
+    });
+
+    it('sets the `data`', () => {
+      expect(minedBlock.data).toEqual('mined-data');
+    });
+
+    it('sets the `timestamp`', () => {
+      expect(minedBlock.timestamp).not.toEqual(undefined);
     });
   });
 
