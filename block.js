@@ -15,11 +15,12 @@ class Block {
 
   static mineBlock({lastBlock, data}) {
     const _timestamp = Date.now();
+    const _lastHash = lastBlock.hash;
     return new this({
       timestamp: _timestamp,
       data: data,
-      hash: cryptoHash(_timestamp, data, lastBlock.hash),
-      lastHash: lastBlock.hash
+      hash: cryptoHash(_timestamp, data, _lastHash),
+      lastHash: _lastHash
     });
   }
 }

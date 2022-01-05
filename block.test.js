@@ -2,7 +2,7 @@ const Block = require("./block");
 const { GENESIS_BLOCK_DATA } = require("./config");
 const cryptoHash = require("./crypto-hash");
 
-describe('Block', () => {
+describe('Testing a Block()', () => {
 
   const timestamp = 'a-date';
   const data = ['blockchain', 'data'];
