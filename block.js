@@ -1,5 +1,6 @@
 const { GENESIS_BLOCK_DATA } = require("./config");
 const cryptoHash = require("./crypto-hash");
+const lodash = require('lodash');
 
 class Block {
   constructor({timestamp, data, hash, lastHash}) {
@@ -22,6 +23,10 @@ class Block {
       hash: cryptoHash(_timestamp, data, _lastHash),
       lastHash: _lastHash
     });
+  }
+
+  isEqual(otherBlock) {
+    return lodash.isEqual(this, otherBlock);
   }
 }
 

@@ -55,8 +55,18 @@ describe('Testing a Block()', () => {
     });
   });
 
-  // describe('generateHash()', () => {
-
-  // });
-
+  describe('isEqual()', () => {
+    var block1, block2;
+    beforeEach(() => {
+      block1 = Block.genesis();
+      block2 = Block.genesis();
+    });
+    it('should return true', () => {
+      expect(block1.isEqual(block2)).toBe(true);
+    });
+    it('should return false', () => {
+      block1.data = block1.data + '###';
+      expect(block1.isEqual(block2)).toBe(false);
+    });
+  });
 });
