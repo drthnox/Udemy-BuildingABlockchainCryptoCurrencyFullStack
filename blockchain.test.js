@@ -80,15 +80,28 @@ describe('Testing the Blockchain', () => {
   });
 
   describe('replaceChain()', () => {
+    let errMock, logMock;
+
+    beforeEach(() => {
+      errMock = jest.fn();
+      logMock = jest.fn();
+      global.console.error = errMock;
+      global.console.log = logMock;
+    });
 
     describe('when new chain is shorter', () => {
 
-      it('should not replace the chain', () => {
+      beforeEach(() => {
         newChain.chain[0] = {new: 'chain'};
-
         blockchain.replaceChain(newChain.chain);
+      });
 
+      it('should not replace the chain', () => {
         expect(blockchain.chain).toEqual(originalChain);
+      });
+
+      it('logs an error', () => {
+        expect(errMock).toHaveBeenCalled();
       });
 
     });
@@ -103,22 +116,30 @@ describe('Testing the Blockchain', () => {
 
       describe('and the new chain is invalid', () => {
 
-        it('should not replace the chain', () => {
+        beforeEach(() => {
           newChain.chain[2].hash = 'some-fake-hash';
-
           blockchain.replaceChain(newChain.chain);
+        });
 
+        it('should not replace the chain', () => {
           expect(blockchain.chain).toEqual(originalChain);
         });
+
 
       });
 
       describe('and the new chain is valid', () => {
 
-        it('should replace the chain', () => {
+        beforeEach(() => {
           blockchain.replaceChain(newChain.chain);
+        });
 
+        it('should replace the chain', () => {
           expect(blockchain.chain).toEqual(newChain.chain);
+        });
+
+        it('logs about the chain replacement', () => {
+          expect(logMock).toHaveBeenCalled();
         });
 
       });
