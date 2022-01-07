@@ -28,6 +28,10 @@ class Block {
   isEqual(otherBlock) {
     return lodash.isEqual(this, otherBlock);
   }
+
+  isGenesis() {
+    return lodash.isEqual(this, Block.genesis())
+  }
 }
 
 module.exports = Block;

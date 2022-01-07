@@ -1,18 +1,41 @@
+const Block = require('./block');
+const cryptoHash = require("./crypto-hash");
 
 class Blockchain {
+
   constructor() {
-    const genesis = new Block('gen-data', 'gen-hash', 'gen-lastHash');
-    this.chain = [genesis];
+    this.chain = [Block.genesis()];
   }
 
-  lightningHash = (data) => {
-    return data + '*';
-  }
-
-  addBlock(data) {
-    const lastHash = this.chain[this.chain.length-1].hash;
-    const hash = lightningHash(data+lastHash);
-    const newBlock = new Block(data, hash, lastHash);
+  addBlock({ data }) {
+    const lastBlock = this.chain[this.chain.length - 1];
+    const newBlock = Block.mineBlock({
+      data: data,
+      lastBlock: lastBlock
+    });
     this.chain.push(newBlock);
   }
+
+  static isValidChain(chain) {
+    let block = chain[0];
+    if (!block.isGenesis()) {
+      return false;
+    }
+    for (let i=1; i<chain.length;i++) {
+      const currentBlock = chain[i];
+      const prevBlock = chain[i-1];
+      const actualLastHash = prevBlock.lastHash;
+      const {timestamp, data, hash, lastHash} = currentBlock;
+      if(lastHash !== actualLastHash) {
+        return false;
+      }
+      const validatedHash = cryptoHash(timestamp, lastHash, data);
+      if(hash !== validatedHash) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
+
+module.exports = Blockchain;

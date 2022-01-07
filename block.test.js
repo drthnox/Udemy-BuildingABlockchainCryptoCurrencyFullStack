@@ -36,7 +36,6 @@ describe('Testing a Block()', () => {
     const lastBlock = Block.genesis();
     const data = 'mined-data';
     const minedBlock = Block.mineBlock({ lastBlock, data });
-    console.log('minedBlock', minedBlock);
 
     it('returns a Block instance', () => {
       expect(minedBlock instanceof Block).toBe(true);
@@ -67,6 +66,22 @@ describe('Testing a Block()', () => {
     it('should return false', () => {
       block1.data = block1.data + '###';
       expect(block1.isEqual(block2)).toBe(false);
+    });
+  });
+
+  describe('isGenesis()', () => {
+    const genesisBlock = Block.genesis();
+
+    it('should return true', () => {
+      expect(genesisBlock.isGenesis()).toBe(true);
+    });
+
+    it('should return false', () => {
+      const block = Block.mineBlock({
+        lastBlock: Block.genesis(),
+        data: 'some-data'
+      });
+      expect(block.isGenesis()).toBe(false);
     });
   });
 });
