@@ -22,10 +22,9 @@ class Blockchain {
       return false;
     }
     for (let i=1; i<chain.length;i++) {
-      const currentBlock = chain[i];
+      const {timestamp, data, hash, lastHash}  = chain[i];
       const prevBlock = chain[i-1];
       const actualLastHash = prevBlock.lastHash;
-      const {timestamp, data, hash, lastHash} = currentBlock;
       if(lastHash !== actualLastHash) {
         return false;
       }
