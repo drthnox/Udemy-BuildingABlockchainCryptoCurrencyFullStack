@@ -19,7 +19,7 @@ class Blockchain {
 
   static isValidChain(chain) {
     let block = chain[0];
-    if (JSON.stringify(block) != JSON.stringify(Block.genesis())) {
+    if(!lodash.isEqual(block, Block.genesis())) {
       return false;
     }
     for (let i=1; i<chain.length;i++) {
