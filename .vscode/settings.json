@@ -1,2 +1,4 @@
 {
+  "jest.jestCommandLine": "npm run test --",
+  "jestTestExplorer.pathToJest": "node_modules/.bin/jest"
 }

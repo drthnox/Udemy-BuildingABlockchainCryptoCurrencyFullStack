@@ -3,25 +3,38 @@ const cryptoHash = require("./crypto-hash");
 const lodash = require('lodash');
 
 class Block {
-  constructor({timestamp, data, hash, lastHash}) {
+  constructor({ timestamp, data, hash, lastHash, nonce, difficulty }) {
     this.timestamp = timestamp;
     this.data = data;
     this.hash = hash;
     this.lastHash = lastHash;
+    this.nonce = nonce;
+    this.difficulty = difficulty;
   }
 
   static genesis() {
     return new this(GENESIS_BLOCK_DATA);
   }
 
-  static mineBlock({lastBlock, data}) {
-    const _timestamp = Date.now();
-    const _lastHash = lastBlock.hash;
+  static mineBlock({ lastBlock, data }) {
+    const lastHash = lastBlock.hash;
+    const difficulty = lastBlock.difficulty;
+    let nonce = 0;
+    let hash, timestamp;
+
+    do {
+      nonce++;
+      timestamp = Date.now();
+      hash = cryptoHash(timestamp, data, lastHash, nonce, difficulty);
+    } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
+
     return new this({
-      timestamp: _timestamp,
+      timestamp: timestamp,
       data: data,
-      hash: cryptoHash(_timestamp, data, _lastHash),
-      lastHash: _lastHash
+      hash: hash,
+      lastHash: lastHash,
+      nonce: nonce,
+      difficulty: difficulty
     });
   }
 

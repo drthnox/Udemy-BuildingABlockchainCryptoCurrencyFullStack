@@ -8,13 +8,17 @@ describe('Testing a Block()', () => {
   const data = ['blockchain', 'data'];
   const lastHash = 'foo-hash';
   const hash = 'bar-hash';
-  const block = new Block({ timestamp, data, hash, lastHash });
+  const nonce = GENESIS_BLOCK_DATA.nonce;
+  const difficulty = GENESIS_BLOCK_DATA.difficulty;
+  const block = new Block({ timestamp, data, hash, lastHash, nonce, difficulty });
 
   it('has a timestamp, data, lastHash and hash properties', () => {
     expect(block.timestamp).toEqual(timestamp);
     expect(block.data).toEqual(data);
     expect(block.lastHash).toEqual(lastHash);
     expect(block.hash).toEqual(hash);
+    expect(block.nonce).toEqual(nonce);
+    expect(block.difficulty).toEqual(difficulty);
   });
 
   describe('genesis()', () => {
@@ -29,6 +33,8 @@ describe('Testing a Block()', () => {
       expect(genesisBlock.timestamp).toEqual(GENESIS_BLOCK_DATA.timestamp);
       expect(genesisBlock.hash).toEqual(GENESIS_BLOCK_DATA.hash);
       expect(genesisBlock.lastHash).toEqual(GENESIS_BLOCK_DATA.lastHash);
+      expect(genesisBlock.nonce).toEqual(GENESIS_BLOCK_DATA.nonce);
+      expect(genesisBlock.difficulty).toEqual(GENESIS_BLOCK_DATA.difficulty);
     });
   });
 
@@ -49,8 +55,28 @@ describe('Testing a Block()', () => {
       expect(minedBlock.timestamp).not.toEqual(undefined);
     });
 
+    it('sets the `nonce`', () => {
+      expect(minedBlock.nonce).not.toEqual(undefined);
+    });
+
+    it('sets the `dificulty`', () => {
+      expect(minedBlock.difficulty).not.toEqual(undefined);
+    });
+
     it('creates a SHA256 hash based on proper inputs', () => {
-      expect(minedBlock.hash).toEqual(cryptoHash(minedBlock.timestamp, lastBlock.hash, data));
+      expect(minedBlock.hash).toEqual(
+        cryptoHash(
+          minedBlock.timestamp,
+          minedBlock.nonce,
+          minedBlock.difficulty,
+          lastBlock.hash,
+          data));
+    });
+
+    it('sets the `hash` that matches the difficulty criteria', () => {
+      minedBlock.difficulty = GENESIS_BLOCK_DATA.difficulty;
+
+      expect(minedBlock.hash.substring(0, minedBlock.difficulty)).toEqual('0'.repeat(minedBlock.difficulty));
     });
   });
 
