@@ -1,16 +1,23 @@
 const Block = require("./block");
-const { GENESIS_BLOCK_DATA } = require("./config");
+const { GENESIS_BLOCK_DATA, MINE_RATE_IN_MILLIS, MINE_RATE_ADJUSTMENT_IN_MILLIS } = require("./config");
 const cryptoHash = require("./crypto-hash");
 
 describe('Testing a Block()', () => {
 
-  const timestamp = 'a-date';
+  const timestamp = 2000;
   const data = ['blockchain', 'data'];
   const lastHash = 'foo-hash';
   const hash = 'bar-hash';
   const nonce = GENESIS_BLOCK_DATA.nonce;
   const difficulty = GENESIS_BLOCK_DATA.difficulty;
-  const block = new Block({ timestamp, data, hash, lastHash, nonce, difficulty });
+  const block = new Block({
+    timestamp: timestamp,
+    data: data,
+    hash: hash,
+    lastHash: lastHash,
+    nonce: nonce,
+    difficulty: difficulty
+  });
 
   it('has a timestamp, data, lastHash and hash properties', () => {
     expect(block.timestamp).toEqual(timestamp);
@@ -81,21 +88,27 @@ describe('Testing a Block()', () => {
   });
 
   describe('isEqual()', () => {
+
     var block1, block2;
+
     beforeEach(() => {
       block1 = Block.genesis();
       block2 = Block.genesis();
     });
+
     it('should return true', () => {
       expect(block1.isEqual(block2)).toBe(true);
     });
+
     it('should return false', () => {
       block1.data = block1.data + '###';
+
       expect(block1.isEqual(block2)).toBe(false);
     });
   });
 
   describe('isGenesis()', () => {
+
     const genesisBlock = Block.genesis();
 
     it('should return true', () => {
@@ -107,7 +120,39 @@ describe('Testing a Block()', () => {
         lastBlock: Block.genesis(),
         data: 'some-data'
       });
+
       expect(block.isGenesis()).toBe(false);
+    });
+  });
+
+  describe('adjustDifficulty()', () => {
+    let block;
+    beforeEach(() => {
+      block = new Block({
+        timestamp: timestamp,
+        data: data,
+        hash: hash,
+        lastHash: lastHash,
+        nonce: nonce,
+        difficulty: difficulty
+      });
+    });
+
+    it('should increase difficulty for a quickly mined block', () => {
+      console.log('block.timestamp', block.timestamp);
+      expect(Block.adjustDifficulty({
+        originalBlock: block,
+        timestamp: block.timestamp + MINE_RATE_IN_MILLIS - MINE_RATE_ADJUSTMENT_IN_MILLIS
+      })).toEqual(block.difficulty + 1);
+    });
+
+    it('should decrease difficulty for a slowly mined block', () => {
+      console.log('block.timestamp', block.timestamp);
+      console.log(block.timestamp, MINE_RATE_IN_MILLIS, MINE_RATE_ADJUSTMENT_IN_MILLIS);
+      expect(Block.adjustDifficulty({
+        originalBlock: block,
+        timestamp: block.timestamp + MINE_RATE_IN_MILLIS + MINE_RATE_ADJUSTMENT_IN_MILLIS
+      })).toEqual(block.difficulty - 1);
     });
   });
 });

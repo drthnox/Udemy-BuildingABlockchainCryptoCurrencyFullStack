@@ -1,5 +1,6 @@
 const INITIAL_DIFFICULTY = 3;
-
+const MINE_RATE_IN_MILLIS = 1000;
+const MINE_RATE_ADJUSTMENT_IN_MILLIS = 100;
 const GENESIS_BLOCK_DATA = {
   timestamp: 1,
   lastHash: '-----',
@@ -9,4 +10,4 @@ const GENESIS_BLOCK_DATA = {
   data: []
 };
 
-module.exports = {GENESIS_BLOCK_DATA};
+module.exports = {GENESIS_BLOCK_DATA, MINE_RATE_IN_MILLIS, MINE_RATE_ADJUSTMENT_IN_MILLIS};

@@ -1,4 +1,4 @@
-const { GENESIS_BLOCK_DATA } = require("./config");
+const { GENESIS_BLOCK_DATA, MINE_RATE_IN_MILLIS } = require("./config");
 const cryptoHash = require("./crypto-hash");
 const lodash = require('lodash');
 
@@ -27,7 +27,6 @@ class Block {
       timestamp = Date.now();
       hash = cryptoHash(timestamp, data, lastHash, nonce, difficulty);
     } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
-
     return new this({
       timestamp: timestamp,
       data: data,
@@ -44,6 +43,21 @@ class Block {
 
   isGenesis() {
     return lodash.isEqual(this, Block.genesis())
+  }
+
+  static adjustDifficulty({ originalBlock, timestamp }) {
+    const difficulty = originalBlock.difficulty;
+    const difference = timestamp - originalBlock.timestamp;
+    let adjustedDifficulty = difficulty;
+    if (difference > MINE_RATE_IN_MILLIS) {
+      // block mined too slowly, so lower the difficulty
+      adjustedDifficulty -= 1;
+    } else {
+      // block mined too quickly, so increase the difficulty
+      adjustedDifficulty += 1;
+    }
+    console.log('old difficulty', difficulty, 'new difficulty', adjustedDifficulty);
+    return adjustedDifficulty;
   }
 }
 
