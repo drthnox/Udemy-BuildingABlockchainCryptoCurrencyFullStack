@@ -46,7 +46,7 @@ class Block {
   }
 
   static adjustDifficulty({ originalBlock, timestamp }) {
-    const difficulty = originalBlock.difficulty;
+    const {difficulty} = originalBlock;
     const difference = timestamp - originalBlock.timestamp;
     let adjustedDifficulty = difficulty;
     if (difference > MINE_RATE_IN_MILLIS) {
