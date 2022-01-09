@@ -81,10 +81,17 @@ describe('Testing a Block()', () => {
     });
 
     it('sets the `hash` that matches the difficulty criteria', () => {
-      minedBlock.difficulty = GENESIS_BLOCK_DATA.difficulty;
+      minedBlock.difficulty = 2;
 
       expect(minedBlock.hash.substring(0, minedBlock.difficulty)).toEqual('0'.repeat(minedBlock.difficulty));
     });
+
+    it('adjusts the difficulty', () => {
+      const possibleResults = [lastBlock.difficulty - 1, lastBlock.difficulty + 1];
+
+      expect(possibleResults.includes(minedBlock.difficulty)).toBe(true);
+    });
+
   });
 
   describe('isEqual()', () => {
