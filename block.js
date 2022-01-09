@@ -56,7 +56,6 @@ class Block {
       // block mined too quickly, so increase the difficulty
       adjustedDifficulty += 1;
     }
-    console.log('old difficulty', difficulty, 'new difficulty', adjustedDifficulty);
     return adjustedDifficulty;
   }
 }

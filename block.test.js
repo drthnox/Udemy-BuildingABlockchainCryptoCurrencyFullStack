@@ -126,20 +126,8 @@ describe('Testing a Block()', () => {
   });
 
   describe('adjustDifficulty()', () => {
-    let block;
-    beforeEach(() => {
-      block = new Block({
-        timestamp: timestamp,
-        data: data,
-        hash: hash,
-        lastHash: lastHash,
-        nonce: nonce,
-        difficulty: difficulty
-      });
-    });
 
     it('should increase difficulty for a quickly mined block', () => {
-      console.log('block.timestamp', block.timestamp);
       expect(Block.adjustDifficulty({
         originalBlock: block,
         timestamp: block.timestamp + MINE_RATE_IN_MILLIS - MINE_RATE_ADJUSTMENT_IN_MILLIS
@@ -147,8 +135,6 @@ describe('Testing a Block()', () => {
     });
 
     it('should decrease difficulty for a slowly mined block', () => {
-      console.log('block.timestamp', block.timestamp);
-      console.log(block.timestamp, MINE_RATE_IN_MILLIS, MINE_RATE_ADJUSTMENT_IN_MILLIS);
       expect(Block.adjustDifficulty({
         originalBlock: block,
         timestamp: block.timestamp + MINE_RATE_IN_MILLIS + MINE_RATE_ADJUSTMENT_IN_MILLIS
