@@ -53,6 +53,9 @@ class Block {
     if (difference > MINE_RATE_IN_MILLIS) {
       // block mined too slowly, so lower the difficulty
       adjustedDifficulty -= 1;
+      if(adjustedDifficulty < 1) {
+        adjustedDifficulty = 1;
+      }
     } else {
       // block mined too quickly, so increase the difficulty
       adjustedDifficulty += 1;

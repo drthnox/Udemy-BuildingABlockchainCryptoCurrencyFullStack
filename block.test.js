@@ -147,5 +147,13 @@ describe('Testing a Block()', () => {
         timestamp: block.timestamp + MINE_RATE_IN_MILLIS + MINE_RATE_ADJUSTMENT_IN_MILLIS
       })).toEqual(block.difficulty - 1);
     });
+
+    it('should never lower the difficulty below 1', () => {
+      block.difficulty = 1;
+      expect(Block.adjustDifficulty({
+        originalBlock: block,
+        timestamp: block.timestamp + MINE_RATE_IN_MILLIS + MINE_RATE_ADJUSTMENT_IN_MILLIS
+      })).toEqual(1);
+    });
   });
 });
