@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const hexToBinary = require('hex-to-binary');
+// const hexToBinary = require('hex-to-binary');
 
 const cryptoHash = (...inputs) => {
   // encrypt
@@ -10,7 +10,8 @@ const cryptoHash = (...inputs) => {
   const hex = hash.digest('hex');
 
   // convert hex to binary form
-  return hexToBinary(hex);
+  // return hexToBinary(hex);
+  return hex;
 };
 
 module.exports = cryptoHash;
