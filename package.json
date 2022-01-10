@@ -13,6 +13,7 @@
     "jest": "^27.4.7"
   },
   "dependencies": {
+    "hex-to-binary": "^1.0.1",
     "lodash": "^4.17.21"
   }
 }
