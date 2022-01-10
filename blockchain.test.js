@@ -2,6 +2,7 @@ const Blockchain = require('./blockchain');
 const Block = require('./block');
 const { GENESIS_BLOCK_DATA } = require('./config');
 const lodash = require('lodash');
+const cryptoHash = require("./crypto-hash");
 
 describe('Testing the Blockchain', () => {
 
@@ -66,6 +67,30 @@ describe('Testing the Blockchain', () => {
 
           expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
         });
+      });
+    });
+
+    describe('and the chain contains a jumped difficulty', () => {
+      it('should return false', () => {
+
+        // get the last block
+        const lastBlock = blockchain.chain[blockchain.chain.length - 1];
+
+        // create a bad block with a jumped difficulty
+        const lastHash = lastBlock.hash;
+        const timestamp = Date.now();
+        const nonce = 0;
+        const data = [];
+        const difficulty = lastBlock.difficulty - 3;
+        const hash = cryptoHash(timestamp, lastHash, difficulty, nonce, data);
+        const bad_block = new Block({timestamp, lastHash, hash, nonce, difficulty, data});
+
+        // add the bad block to the chain
+        blockchain.chain.push(bad_block);
+
+        const isValid = Blockchain.isValidChain(blockchain.chain);
+
+        expect(isValid).toBe(false);
       });
     });
 
