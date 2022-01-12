@@ -19,6 +19,9 @@
     "express": "^4.17.2",
     "hex-to-binary": "^1.0.1",
     "lodash": "^4.17.21",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "redis": "^4.0.1",
+    "redis-mock": "^0.56.3",
+    "should": "^13.2.3"
   }
 }
