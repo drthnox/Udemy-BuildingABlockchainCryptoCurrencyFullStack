@@ -6,14 +6,14 @@ const CHANNELS = {
 
 class PubSub {
   constructor() {
-    this.publisher = PubSub.createClient();
-    this.subscriber = PubSub.createClient();
+    this.publisher = redis.createClient();
+    this.subscriber = redis.createClient();
   }
 
-
-  static createClient(client) {
-    return redis.createClient();
+  init() {
+    this.subscriber.subscribe(CHANNELS.TEST);
+    this.subscriber.on('message', (channel, message) => this.handleMessage(channel, message));
   }
 }
 
-module.exports = PubSub;
+module.exports = PubSub, CHANNELS;
