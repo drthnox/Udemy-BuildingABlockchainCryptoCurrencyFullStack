@@ -1,8 +1,5 @@
 const redis = require('redis');
-
-const CHANNELS = {
-  TEST: 'TEST'
-};
+const {CHANNELS} = require('./config');
 
 class PubSub {
   constructor() {
@@ -12,8 +9,28 @@ class PubSub {
 
   init() {
     this.subscriber.subscribe(CHANNELS.TEST);
+    this.subscriber.subscribe(CHANNELS.BLOCKCHAIN);
     this.subscriber.on('message', (channel, message) => this.handleMessage(channel, message));
+  }
+
+  handleMessage({channel, message}) {
+    console.log(`Message received: ${message} on channel ${channel}`);
+  }
+
+  subscribeToChannels() {
+    Object.values(CHANNELS).forEach((channel) => {
+      this.subscriber.subscribe(channel);
+    });
+  }
+
+  publish({channel, message}) {
+    this.publisher.publish(channel, message);
+  }
+
+  reset() {
+    this.subscriber.quit();
+    this.publisher.quit();
   }
 }
 
-module.exports = PubSub, CHANNELS;
+module.exports = PubSub;
