@@ -1,8 +1,10 @@
 const redis = require('redis');
+const Blockchain = require('./blockchain');
 const {CHANNELS} = require('./config');
 
 class PubSub {
-  constructor() {
+  constructor({blockchain}) {
+    this.blockchain = blockchain;
     this.publisher = redis.createClient();
     this.subscriber = redis.createClient();
   }

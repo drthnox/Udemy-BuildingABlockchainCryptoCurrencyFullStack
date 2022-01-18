@@ -1,18 +1,23 @@
 const redis = require('redis');
+const Blockchain = require('./blockchain');
 const should = require('should');
 const PubSub = require('./pubsub');
 const {CHANNELS} = require('./config');
 
 describe('PubSub()', () => {
-
+  const blockchain = new Blockchain();
   const redisSpy = jest.spyOn(redis, 'createClient');
-  const pubsub = new PubSub();
+  const pubsub = new PubSub({blockchain});
 
   describe('constructor()', () => {
     it('should create a new PubSub with default attributes', () => {
       should.notEqual(pubsub.publisher, undefined);
       should.notEqual(pubsub.subscriber, undefined);
       expect(redisSpy).toBeCalled();
+    });
+
+    it('should store a copy of the blockchain passed to it', () => {
+      should.notEqual(pubsub.blockchain, undefined);
     });
   });
 
