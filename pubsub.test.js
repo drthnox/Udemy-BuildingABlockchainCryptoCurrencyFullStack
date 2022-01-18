@@ -29,7 +29,6 @@ describe('PubSub()', () => {
     });
 
     it('should initialise by subscribing to the CHANNELS', () => {
-      console.log('channels', CHANNELS);
       expect(subscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST);
       expect(subscriberSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN);
     });
@@ -61,17 +60,15 @@ describe('PubSub()', () => {
     });
   });
 
-  // describe('publish()', () => {
-  //   it('should publish messages to channels', () => {
-  //     pubsub.subscribeToChannels();
-  //     const handleMessageSpy = jest.spyOn(pubsub, 'handleMessage');
-  //     const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
+  describe('publish()', () => {
+    it('should publish messages to channels', () => {
+      const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
+      publisherSpy.mockImplementation(({channel, message}) => {});
 
-  //     pubsub.publish({channel:CHANNELS.TEST, message:'blah blah'});
+      pubsub.publish({channel:CHANNELS.TEST, message:'blah blah'});
 
-  //     expect(publisherSpy).toHaveBeenCalledWith({channel:CHANNELS.TEST, message:'blah blah'});
-  //     expect(handleMessageSpy).toHaveBeenCalledWith({channel:CHANNELS.TEST, message:'blah blah'});
-  //   });
-  // });
+      expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.TEST, 'blah blah');
+    });
+  });
 
 });
