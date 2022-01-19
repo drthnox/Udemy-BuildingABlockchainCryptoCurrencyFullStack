@@ -30,8 +30,12 @@ class PubSub {
   }
 
   reset() {
-    this.subscriber.quit();
-    this.publisher.quit();
+    // this.subscriber.quit();
+    // this.publisher.quit();
+  }
+
+  broadcastChain({blockchain}) {
+    this.publish({channel:CHANNELS.BLOCKCHAIN, message:blockchain});
   }
 }
 
