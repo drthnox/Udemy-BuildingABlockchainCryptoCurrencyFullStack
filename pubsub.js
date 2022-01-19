@@ -7,6 +7,8 @@ class PubSub {
     this.blockchain = blockchain;
     this.publisher = redis.createClient();
     this.subscriber = redis.createClient();
+    // await this.publisher.connect();
+    // await this.subscriber.connect();
   }
 
   init() {
@@ -34,8 +36,8 @@ class PubSub {
     // this.publisher.quit();
   }
 
-  broadcastChain({blockchain}) {
-    this.publish({channel:CHANNELS.BLOCKCHAIN, message:blockchain});
+  broadcastChain() {
+    this.publish({channel:CHANNELS.BLOCKCHAIN, message:this.blockchain});
   }
 }
 
