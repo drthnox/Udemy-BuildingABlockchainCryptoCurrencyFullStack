@@ -53,15 +53,17 @@ describe('PubSub()', () => {
     });
   });
 
-  // describe('handleMessage()', () => {
-  //   it('should receive a message and a channel', () => {
-  //     const logSpy = jest.spyOn(console, 'log');
+  describe('handleMessage()', () => {
+    it('should receive a message and a channel', () => {
+      const blockchain = new Blockchain();
+      const pubsub = new PubSub({blockchain});
+      const logSpy = jest.spyOn(console, 'log');
 
-  //     pubsub.handleMessage({channel:CHANNELS.TEST, message:'blah blah'});
+      pubsub.handleMessage({channel:CHANNELS.TEST, message:'blah blah'});
 
-  //     expect(logSpy).toBeCalled();
-  //   });
-  // });
+      expect(logSpy).toBeCalled();
+    });
+  });
 
   describe('subscribeToChannels()', () => {
     const blockchain = new Blockchain();
