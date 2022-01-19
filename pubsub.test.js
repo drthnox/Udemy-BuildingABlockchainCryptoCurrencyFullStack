@@ -76,4 +76,15 @@ describe('PubSub()', () => {
     });
   });
 
+  describe('broadcastChain()', () => {
+    it('should broadcast the chain', () => {
+      const blockchain = new Blockchain();
+      const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
+      publisherSpy.mockImplementation(({channel, message}) => {});
+
+      pubsub.broadcastChain({blockchain:blockchain});
+
+      expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, blockchain);
+    });
+  });
 });
