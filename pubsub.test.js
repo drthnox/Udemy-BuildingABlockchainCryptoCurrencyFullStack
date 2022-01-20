@@ -1,7 +1,7 @@
 const Blockchain = require('./blockchain');
 const should = require('should');
 const PubSub = require('./pubsub');
-const {CHANNELS} = require('./config');
+const { CHANNELS } = require('./config');
 const redis = require('redis');
 // jest.mock('redis');
 
@@ -13,7 +13,7 @@ describe('PubSub()', () => {
       const blockchain = new Blockchain();
       const redisSpy = jest.spyOn(redis, 'createClient');
 
-      const pubsub = new PubSub({blockchain});
+      const pubsub = new PubSub({ blockchain });
 
       should.notEqual(pubsub.publisher, undefined);
       should.notEqual(pubsub.subscriber, undefined);
@@ -23,7 +23,7 @@ describe('PubSub()', () => {
     it('should store a copy of the blockchain passed to it', () => {
       const blockchain = new Blockchain();
 
-      const pubsub = new PubSub({blockchain});
+      const pubsub = new PubSub({ blockchain });
 
       should.notEqual(pubsub.blockchain, undefined);
     });
@@ -31,7 +31,7 @@ describe('PubSub()', () => {
 
   describe('init()', () => {
     const blockchain = new Blockchain();
-    const pubsub = new PubSub({blockchain});
+    const pubsub = new PubSub({ blockchain });
     const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
     const onMessageSpy = jest.spyOn(pubsub.subscriber, 'on');
 
@@ -56,10 +56,10 @@ describe('PubSub()', () => {
   describe('handleMessage()', () => {
     it('should receive a message and a channel', () => {
       const blockchain = new Blockchain();
-      const pubsub = new PubSub({blockchain});
+      const pubsub = new PubSub({ blockchain });
       const logSpy = jest.spyOn(console, 'log');
 
-      pubsub.handleMessage({channel:CHANNELS.TEST, message:'blah blah'});
+      pubsub.handleMessage({ channel: CHANNELS.TEST, message: 'blah blah' });
 
       expect(logSpy).toBeCalled();
     });
@@ -67,7 +67,7 @@ describe('PubSub()', () => {
 
   describe('subscribeToChannels()', () => {
     const blockchain = new Blockchain();
-    const pubsub = new PubSub({blockchain});
+    const pubsub = new PubSub({ blockchain });
     const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
 
     it('should subscribe to channels', () => {
@@ -79,32 +79,40 @@ describe('PubSub()', () => {
     });
   });
 
-  // describe('Publishing to channels', () => {
+  describe('Publishing to channels', () => {
 
-  //   const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
+    describe('publish()', () => {
+      const blockchain = new Blockchain();
+      const pubsub = new PubSub({ blockchain });
+      const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
+      const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
 
-  //   beforeEach(() => {
-  //     publisherSpy.mockImplementation(({channel, message}) => {});
-  //   });
+      beforeEach(() => {
+        publisherSpy.mockImplementation(({ channel, message }) => { });
+      });
 
-  //   afterEach(() => {
-  //     // pubsub.publisher.discard();
-  //   });
+      it('should publish messages to channels', () => {
+        pubsub.publish({ channel: CHANNELS.TEST, message: 'blah blah' });
 
-  //   // describe('publish()', () => {
-  //     it('should publish messages to channels', () => {
-  //       // pubsub.publish({channel:CHANNELS.TEST, message:'blah blah'});
+        expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.TEST, 'blah blah');
+      });
+    });
 
-  //       // expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.TEST, 'blah blah');
-  //     });
-  //   // });
+    describe('broadcastChain()', () => {
+      const blockchain = new Blockchain();
+      const pubsub = new PubSub({ blockchain });
+      const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
+      const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
 
-  //   // describe('broadcastChain()', () => {
-  //     // it('should broadcast the chain', () => {
-  //     //   pubsub.broadcastChain();
+      beforeEach(() => {
+        publisherSpy.mockImplementation(({ channel, message }) => { });
+      });
 
-  //     //   expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, pubsub.blockchain.chain);
-  //     // });
-  //   // });
-  // });
+      it('should broadcast the chain', () => {
+        pubsub.broadcastChain();
+
+        expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, pubsub.blockchain.chain);
+      });
+    });
+  });
 });

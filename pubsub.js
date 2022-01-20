@@ -37,7 +37,7 @@ class PubSub {
   }
 
   broadcastChain() {
-    this.publish({channel:CHANNELS.BLOCKCHAIN, message:this.blockchain});
+    this.publish({channel:CHANNELS.BLOCKCHAIN, message:this.blockchain.chain});
   }
 }
 
