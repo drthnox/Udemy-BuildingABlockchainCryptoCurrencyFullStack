@@ -101,7 +101,7 @@ describe('PubSub()', () => {
       it('should broadcast the chain', () => {
         pubsub.broadcastChain();
 
-        expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, pubsub.blockchain.chain);
+        expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, JSON.stringify(pubsub.blockchain.chain));
       });
     });
   });
