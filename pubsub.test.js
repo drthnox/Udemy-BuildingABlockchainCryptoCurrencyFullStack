@@ -80,17 +80,16 @@ describe('PubSub()', () => {
   });
 
   describe('Publishing to channels', () => {
+    const blockchain = new Blockchain();
+    const pubsub = new PubSub({ blockchain });
+    const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
+    const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
+
+    beforeEach(() => {
+      publisherSpy.mockImplementation(({ channel, message }) => { });
+    });
 
     describe('publish()', () => {
-      const blockchain = new Blockchain();
-      const pubsub = new PubSub({ blockchain });
-      const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
-      const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
-
-      beforeEach(() => {
-        publisherSpy.mockImplementation(({ channel, message }) => { });
-      });
-
       it('should publish messages to channels', () => {
         pubsub.publish({ channel: CHANNELS.TEST, message: 'blah blah' });
 
@@ -99,15 +98,6 @@ describe('PubSub()', () => {
     });
 
     describe('broadcastChain()', () => {
-      const blockchain = new Blockchain();
-      const pubsub = new PubSub({ blockchain });
-      const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
-      const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
-
-      beforeEach(() => {
-        publisherSpy.mockImplementation(({ channel, message }) => { });
-      });
-
       it('should broadcast the chain', () => {
         pubsub.broadcastChain();
 
