@@ -3,10 +3,8 @@ const should = require('should');
 const PubSub = require('./pubsub');
 const { CHANNELS } = require('./config');
 const redis = require('redis');
-// jest.mock('redis');
 
 describe('PubSub()', () => {
-
 
   describe('constructor()', () => {
     it('should create a new PubSub with default attributes', () => {
@@ -54,14 +52,30 @@ describe('PubSub()', () => {
   });
 
   describe('handleMessage()', () => {
-    it('should receive a message and a channel', () => {
+
+    it('should not attempt to replace the chain if a badly-formatted message is received on the BLOCKCHAIN channel', () => {
       const blockchain = new Blockchain();
       const pubsub = new PubSub({ blockchain });
-      const logSpy = jest.spyOn(console, 'log');
+      const errSpy = jest.spyOn(console, 'error');
 
-      pubsub.handleMessage({ channel: CHANNELS.TEST, message: 'blah blah' });
+      pubsub.handleMessage({ channel: CHANNELS.BLOCKCHAIN, message: 'blah blah' });
 
-      expect(logSpy).toBeCalled();
+      expect(errSpy).toHaveBeenCalledWith('Unexpected token b in JSON at position 0');
+    });
+
+    it('should attempt to replace the chain if a message is received on the BLOCKCHAIN channel', () => {
+      const blockchain = new Blockchain();
+      const pubsub = new PubSub({ blockchain });
+      const blockchainSpy = jest.spyOn(blockchain, 'replaceChain');
+      const parseSpy = jest.spyOn(JSON, 'parse');
+      const errSpy = jest.spyOn(console, 'error');
+      errSpy.mockClear();
+
+      pubsub.handleMessage({ channel: CHANNELS.BLOCKCHAIN, message: JSON.stringify(blockchain.chain)});
+
+      expect(parseSpy).toHaveBeenCalledWith(JSON.stringify(blockchain.chain));
+      expect(blockchainSpy).toHaveBeenCalledWith(blockchain.chain);
+      expect(errSpy).toHaveBeenCalledWith('Incoming chain must be longer');
     });
   });
 
@@ -82,7 +96,6 @@ describe('PubSub()', () => {
   describe('Publishing to channels', () => {
     const blockchain = new Blockchain();
     const pubsub = new PubSub({ blockchain });
-    const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
     const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
 
     beforeEach(() => {
