@@ -26,7 +26,7 @@ describe('PubSub()', () => {
     const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
     const onMessageSpy = jest.spyOn(pubsub.subscriber, 'on');
 
-    it('should initialise by subscribing to the CHANNELS', () => {
+    it('should initialise by subscribing to the CHANNELS', async () => {
       pubsub.init();
 
       expect(subscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST);
@@ -38,16 +38,25 @@ describe('PubSub()', () => {
   describe('handleMessage()', () => {
 
     const pubsub = new PubSub({ blockchain });
-    const errSpy = jest.spyOn(console, 'error');
+    // const errSpy = jest.spyOn(console, 'error');
+
+    let errMock, logMock;
 
     beforeEach(() => {
-      errSpy.mockClear();
+      errMock = jest.fn();
+      logMock = jest.fn();
+      global.console.error = errMock;
+      global.console.log = logMock;
     });
+
+    // beforeEach(() => {
+    //   errSpy.mockClear();
+    // });
 
     it('should not attempt to replace the chain if a badly-formatted message is received on the BLOCKCHAIN channel', () => {
       pubsub.handleMessage({ channel: CHANNELS.BLOCKCHAIN, message: 'blah blah' });
 
-      expect(errSpy).toHaveBeenCalledWith('Unexpected token b in JSON at position 0');
+      expect(errMock).toHaveBeenCalledWith('Unexpected token b in JSON at position 0');
     });
 
     it('should attempt to replace the chain if a message is received on the BLOCKCHAIN channel', () => {
@@ -58,7 +67,7 @@ describe('PubSub()', () => {
 
       expect(parseSpy).toHaveBeenCalledWith(JSON.stringify(blockchain.chain));
       expect(blockchainSpy).toHaveBeenCalledWith(blockchain.chain);
-      expect(errSpy).toHaveBeenCalledWith('Incoming chain must be longer');
+      expect(errMock).toHaveBeenCalledWith('Incoming chain must be longer');
     });
   });
 

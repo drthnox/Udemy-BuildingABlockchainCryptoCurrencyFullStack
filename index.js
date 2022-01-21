@@ -1,9 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Blockchain = require('./blockchain');
+const PubSub = require('./pubsub');
 
 const app = express();
 const blockchain = new Blockchain();
+const pubsub = new PubSub({ blockchain });
+
+console.log('initialising...');
+pubsub.init();
+console.log('broadcasting chain...');
+pubsub.broadcastChain();
 
 app.use(bodyParser.json());
 
@@ -12,8 +19,8 @@ app.get('/api/blocks', (req, res) => {
 });
 
 app.post('/api/mine', (req, res) => {
-  const {data} = req.body;
-  blockchain.addBlock({data});
+  const { data } = req.body;
+  blockchain.addBlock({ data });
   res.redirect('/api/blocks');
 });
 

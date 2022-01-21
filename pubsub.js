@@ -1,32 +1,35 @@
 const redis = require('redis');
-const Blockchain = require('./blockchain');
-const {CHANNELS} = require('./config');
+const { CHANNELS } = require('./config');
 
 class PubSub {
-  constructor({blockchain}) {
+
+  constructor({ blockchain }) {
     this.blockchain = blockchain;
     this.publisher = redis.createClient();
     this.subscriber = redis.createClient();
-    // await this.publisher.connect();
-    // await this.subscriber.connect();
   }
 
   init() {
-    this.subscriber.subscribe(CHANNELS.TEST);
-    this.subscriber.subscribe(CHANNELS.BLOCKCHAIN);
-    this.subscriber.on('message', (channel, message) => this.handleMessage(channel, message));
+    // this.subscriber.on('error', err => { console.log('*Redis Subscriber Client Error: ' + err.message);     });
+    // this.subscriber.on('connect', function () { console.log('Subscriber connected to redis instance'); });
+    // this.publisher.on('error', function (err) { console.log('*Redis Publisher Client Error: ' + err.message); });
+    // this.publisher.on('connect', function () { console.log('Publisher connected to redis instance'); });
+    this.subscriber.connect();
+    this.publisher.connect();
+    this.subscribeToChannels();
+    // this.subscriber.subscribe(CHANNELS.TEST);
+    // this.subscriber.subscribe(CHANNELS.BLOCKCHAIN);
   }
 
-  handleMessage({channel, message}) {
+  handleMessage({ channel, message }) {
     console.log(`Message received: ==${message}== on channel ${channel}`);
-    var chain;
     try {
-      chain = JSON.parse(message);
+      const chain = JSON.parse(message);
       console.log(`Parsed message: ${chain}`, chain);
-      if(channel === CHANNELS.BLOCKCHAIN) {
+      if (channel === CHANNELS.BLOCKCHAIN) {
         this.blockchain.replaceChain(chain);
       }
-    } catch(err) {
+    } catch (err) {
       console.error(err.message);
     }
   }
@@ -35,10 +38,16 @@ class PubSub {
     Object.values(CHANNELS).forEach((channel) => {
       this.subscriber.subscribe(channel);
     });
+    this.subscriber.on('message', (channel, message) => this.handleMessage(channel, message));
   }
 
-  publish({channel, message}) {
-    this.publisher.publish(channel, message);
+  publish({ channel, message }) {
+    try {
+      console.log('publisher = ', this.publisher);
+      this.publisher.publish(channel, message);
+    } catch(err) {
+      console.error(err);
+    }
   }
 
   reset() {
@@ -47,7 +56,7 @@ class PubSub {
   }
 
   broadcastChain() {
-    this.publish({channel:CHANNELS.BLOCKCHAIN, message:JSON.stringify(this.blockchain.chain)});
+    this.publish({ channel: CHANNELS.BLOCKCHAIN, message: JSON.stringify(this.blockchain.chain) });
   }
 }
 
