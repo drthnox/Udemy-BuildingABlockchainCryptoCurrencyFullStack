@@ -4,7 +4,7 @@ const PubSub = require('./pubsub');
 const { CHANNELS } = require('./config');
 const redis = require('redis');
 
-describe.skip('PubSub()', () => {
+describe('PubSub()', () => {
 
   const blockchain = new Blockchain();
 
