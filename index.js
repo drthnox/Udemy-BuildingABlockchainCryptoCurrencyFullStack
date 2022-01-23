@@ -7,10 +7,8 @@ const app = express();
 const blockchain = new Blockchain();
 const pubsub = new PubSub({ blockchain });
 
-console.log('initialising...');
-pubsub.init();
-console.log('broadcasting chain...');
-pubsub.broadcastChain();
+// setTimeout(() => pubsub.connect(), 2000);
+setTimeout(() => pubsub.broadcastChain(), 2000);
 
 app.use(bodyParser.json());
 
