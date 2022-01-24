@@ -6,12 +6,15 @@
   "scripts": {
     "test": "jest --watchAll",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "npm run start-redis && nodemon index.js",
+    "dev-peer": "cross-env GENERATE_PEER_PORT='true' nodemon index.js",
+    "start-redis": "/usr/local/bin/redis-server --daemonize yes"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "jest": "^27.4.7",
     "mock-redis-client": "^0.91.13",
     "redis": "^3.0.2"
@@ -24,6 +27,7 @@
     "lodash": "^4.17.21",
     "nodemon": "^2.0.15",
     "redis-mock": "^0.56.3",
+    "request": "^2.88.2",
     "should": "^13.2.3"
   }
 }
