@@ -7,9 +7,6 @@ const app = express();
 const blockchain = new Blockchain();
 const pubsub = new PubSub({ blockchain });
 
-// setTimeout(() => pubsub.connect(), 2000);
-setTimeout(() => pubsub.broadcastChain(), 2000);
-
 app.use(bodyParser.json());
 
 app.get('/api/blocks', (req, res) => {
@@ -27,3 +24,6 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Listening on localhost:${PORT}`);
 });
+
+
+setTimeout(() => pubsub.broadcastChain(), 1000);
