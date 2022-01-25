@@ -88,6 +88,7 @@ describe('PubSub()', () => {
   describe('Publishing to channels', () => {
     const pubsub = new PubSub({ blockchain });
     const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
+    const unsubscriberSpy = jest.spyOn(pubsub.subscriber, 'unsubscribe');
 
     beforeEach(() => {
       publisherSpy.mockImplementation(({ channel, message }) => { });
@@ -95,10 +96,24 @@ describe('PubSub()', () => {
     });
 
     describe('publish()', () => {
+
+      const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
+
       it('should publish messages to channels', () => {
         pubsub.publish({ channel: CHANNELS.TEST, message: 'blah blah' });
 
-        expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.TEST, 'blah blah');
+        expect(unsubscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST, expect.any(Function));
+        // expect(publisherSpy).toHaveBeenCalledWith({ channel: CHANNELS.TEST, message: 'blah blah' });
+        // expect(subscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST);
+      });
+
+      it('should not publish to itself', () => {
+
+        pubsub.publish({ channel: CHANNELS.TEST, message: 'blah blah' });
+
+        expect(unsubscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST, expect.any(Function));
+        // expect(publisherSpy).toHaveBeenCalledWith({ channel: CHANNELS.TEST, message: 'blah blah' });
+        // expect(subscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST);
       });
     });
 
@@ -106,7 +121,8 @@ describe('PubSub()', () => {
       it('should broadcast the chain', () => {
         pubsub.broadcastChain();
 
-        expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, JSON.stringify(pubsub.blockchain.chain));
+        expect(unsubscriberSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, expect.any(Function));
+        // expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, JSON.stringify(pubsub.blockchain.chain));
       });
     });
   });

@@ -46,7 +46,11 @@ class PubSub {
   publish({ channel, message }) {
     try {
       console.log(`Publishing ${message} on ${channel}`);
-      this.publisher.publish(channel, message);
+      this.subscriber.unsubscribe(channel, () => {
+        this.publisher.publish(channel, message, () => {
+          this.subscriber.subscribe(channel);
+        });
+      });
     } catch (err) {
       console.error(err);
     }
