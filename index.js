@@ -26,7 +26,8 @@ app.post('/api/mine', (req, res) => {
 });
 
 const syncChains = () => {
-  request({ur: `${ROOT_NODE_ADDRESS}/api/blocks`}, (error,response,body) => {
+  console.log(`Syncing chains with ${ROOT_NODE_ADDRESS}/api/blocks`);
+  request({url: `${ROOT_NODE_ADDRESS}/api/blocks`}, (error,response,body) => {
     if(!error && response.statusCode == 200) {
       const rootChain = JSON.parse(body);
       console.log('Replace chain on a sync with', rootChain);
@@ -43,4 +44,5 @@ if(process.env.GENERATE_PEER_PORT === 'true') {
 const PORT = PEER_PORT || DEFAULT_PORT;
 app.listen(PORT, () => {
   console.log(`Listening on localhost:${PORT}`);
+  syncChains();
 });

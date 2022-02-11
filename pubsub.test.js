@@ -3,6 +3,7 @@ const should = require('should');
 const PubSub = require('./pubsub');
 const { CHANNELS } = require('./config');
 const redis = require('redis');
+const { RedisClient } = require('redis-mock');
 
 describe('PubSub()', () => {
 
@@ -38,7 +39,6 @@ describe('PubSub()', () => {
   describe('handleMessage()', () => {
 
     const pubsub = new PubSub({ blockchain });
-    // const errSpy = jest.spyOn(console, 'error');
 
     let errMock, logMock;
 
@@ -48,10 +48,6 @@ describe('PubSub()', () => {
       global.console.error = errMock;
       global.console.log = logMock;
     });
-
-    // beforeEach(() => {
-    //   errSpy.mockClear();
-    // });
 
     it('should not attempt to replace the chain if a badly-formatted message is received on the BLOCKCHAIN channel', () => {
       pubsub.handleMessage({ channel: CHANNELS.BLOCKCHAIN, message: 'blah blah' });
@@ -87,33 +83,14 @@ describe('PubSub()', () => {
 
   describe('Publishing to channels', () => {
     const pubsub = new PubSub({ blockchain });
-    const publisherSpy = jest.spyOn(pubsub.publisher, 'publish');
     const unsubscriberSpy = jest.spyOn(pubsub.subscriber, 'unsubscribe');
-
-    beforeEach(() => {
-      publisherSpy.mockImplementation(({ channel, message }) => { });
-      publisherSpy.mockClear();
-    });
 
     describe('publish()', () => {
 
-      const subscriberSpy = jest.spyOn(pubsub.subscriber, 'subscribe');
-
-      it('should publish messages to channels', () => {
-        pubsub.publish({ channel: CHANNELS.TEST, message: 'blah blah' });
-
-        expect(unsubscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST, expect.any(Function));
-        // expect(publisherSpy).toHaveBeenCalledWith({ channel: CHANNELS.TEST, message: 'blah blah' });
-        // expect(subscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST);
-      });
-
       it('should not publish to itself', () => {
-
         pubsub.publish({ channel: CHANNELS.TEST, message: 'blah blah' });
 
         expect(unsubscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST, expect.any(Function));
-        // expect(publisherSpy).toHaveBeenCalledWith({ channel: CHANNELS.TEST, message: 'blah blah' });
-        // expect(subscriberSpy).toHaveBeenCalledWith(CHANNELS.TEST);
       });
     });
 
@@ -122,7 +99,6 @@ describe('PubSub()', () => {
         pubsub.broadcastChain();
 
         expect(unsubscriberSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, expect.any(Function));
-        // expect(publisherSpy).toHaveBeenCalledWith(CHANNELS.BLOCKCHAIN, JSON.stringify(pubsub.blockchain.chain));
       });
     });
   });
