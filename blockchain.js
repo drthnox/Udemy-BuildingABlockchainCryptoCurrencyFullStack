@@ -44,7 +44,7 @@ class Blockchain {
   }
 
   replaceChain(newChain) {
-    console.log('Attempting to replace chain');
+    // console.log('Attempting to replace chain');
     if(newChain.length <= this.chain.length) {
       console.error('Incoming chain must be longer');
       return;
@@ -53,7 +53,7 @@ class Blockchain {
       console.error('Incoming chain must be valid');
       return;
     }
-    console.log('replacing chain with ', newChain);
+    // console.log('replacing chain with ', newChain);
     this.chain = newChain;
   }
 

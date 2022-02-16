@@ -10,7 +10,7 @@ const app = express();
 const blockchain = new Blockchain();
 const pubsub = new PubSub({ blockchain });
 
-setTimeout(() => pubsub.broadcastChain(), 1000);
+// setTimeout(() => pubsub.broadcastChain(), 1000);
 
 app.use(bodyParser.json());
 
@@ -44,5 +44,8 @@ if(process.env.GENERATE_PEER_PORT === 'true') {
 const PORT = PEER_PORT || DEFAULT_PORT;
 app.listen(PORT, () => {
   console.log(`Listening on localhost:${PORT}`);
-  syncChains();
+  if(PORT !== DEFAULT_PORT) {
+    console.log(`${PORT} <> ${DEFAULT_PORT}`);
+    syncChains();
+  }
 });

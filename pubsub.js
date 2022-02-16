@@ -16,7 +16,7 @@ class PubSub {
     this.subscriber.on('error', err => { console.log('*Redis Subscriber Client Error: ' + err.message); });
     this.subscriber.on('connect', function () { console.log('Subscriber connected to redis instance'); });
     this.subscriber.on('message', (channel, message) => {
-      console.log(`${channel}: ${message}`);
+      // console.log(`${channel}: ${message}`);
       this.handleMessage({channel:channel, message:message});}
     );
     this.publisher.on('error', function (err) { console.log('*Redis Publisher Client Error: ' + err.message); });
@@ -28,7 +28,7 @@ class PubSub {
     console.log(`Message received: ==${message}== on channel ${channel}`);
     try {
       const parsedMessage = JSON.parse(message);
-      console.log(`Parsed message: ${parsedMessage}`, parsedMessage);
+      // console.log(`Parsed message: ${parsedMessage}`, parsedMessage);
       if (channel === CHANNELS.BLOCKCHAIN) {
         this.blockchain.replaceChain(parsedMessage);
       }
@@ -43,14 +43,18 @@ class PubSub {
     });
   }
 
+  resubscribe(channel) {
+    this.subscriber.subscribe(channel);
+  }
+
+  republish(channel, message) {
+    this.publisher.publish(channel, message, () => this.resubscribe(channel));
+  }
+
   publish({ channel, message }) {
     try {
-      console.log(`Publishing ${message} on ${channel}`);
-      this.subscriber.unsubscribe(channel, () => {
-        this.publisher.publish(channel, message, () => {
-          this.subscriber.subscribe(channel);
-        });
-      });
+      // console.log(`Publishing ${message} on ${channel}`);
+      this.subscriber.unsubscribe(channel, () => this.republish(channel, message));
     } catch (err) {
       console.error(err);
     }
