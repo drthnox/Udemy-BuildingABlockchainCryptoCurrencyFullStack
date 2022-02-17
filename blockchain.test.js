@@ -23,7 +23,8 @@ describe('Testing the Blockchain', () => {
   });
 
   it('should start with the genesis block', () => {
-    expect(blockchain.chain[0]).toEqual(Block.genesis());
+    expect(blockchain.chain[0].isEqual(Block.genesis()));
+    // expect(blockchain.chain[0]).toEqual(Block.genesis());
     expect(blockchain.chain.length).toEqual(1);
   });
 

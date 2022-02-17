@@ -52,7 +52,7 @@ describe('PubSub()', () => {
     it('should not attempt to replace the chain if a badly-formatted message is received on the BLOCKCHAIN channel', () => {
       pubsub.handleMessage({ channel: CHANNELS.BLOCKCHAIN, message: 'blah blah' });
 
-      expect(errMock).toHaveBeenCalledWith('Unexpected token b in JSON at position 0');
+      expect(errMock).toBeCalled();
     });
 
     it('should attempt to replace the chain if a message is received on the BLOCKCHAIN channel', () => {
@@ -63,7 +63,7 @@ describe('PubSub()', () => {
 
       expect(parseSpy).toHaveBeenCalledWith(JSON.stringify(blockchain.chain));
       expect(blockchainSpy).toHaveBeenCalledWith(blockchain.chain);
-      expect(errMock).toHaveBeenCalledWith('Incoming chain must be longer');
+      expect(errMock).toBeCalled();
     });
   });
 

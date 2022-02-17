@@ -30,7 +30,7 @@ const syncChains = () => {
   request({url: `${ROOT_NODE_ADDRESS}/api/blocks`}, (error,response,body) => {
     if(!error && response.statusCode == 200) {
       const rootChain = JSON.parse(body);
-      console.log('Replace chain on a sync with', rootChain);
+      console.log('Replacing chain with', rootChain);
       blockchain.replaceChain(rootChain);
     }
   });
