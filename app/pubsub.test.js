@@ -1,9 +1,8 @@
-const Blockchain = require('./blockchain');
+const Blockchain = require('../blockchain');
 const should = require('should');
 const PubSub = require('./pubsub');
-const { CHANNELS } = require('./config');
+const { CHANNELS } = require('../config');
 const redis = require('redis');
-const { RedisClient } = require('redis-mock');
 
 describe('PubSub()', () => {
 

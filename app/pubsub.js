@@ -1,6 +1,5 @@
 const redis = require('redis');
-const Blockchain = require('./blockchain');
-const { CHANNELS } = require('./config');
+const { CHANNELS } = require('../config');
 
 
 class PubSub {
