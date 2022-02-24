@@ -49,7 +49,7 @@ describe('Testing a Block()', () => {
   describe('mineBlock()', () => {
     const lastBlock = Block.genesis();
     const data = 'mined-data';
-    const minedBlock = Block.mineBlock({ lastBlock, data });
+    const minedBlock = Block.mine({ lastBlock, data });
 
     it('returns a Block instance', () => {
       expect(minedBlock instanceof Block).toBe(true);
@@ -124,7 +124,7 @@ describe('Testing a Block()', () => {
     });
 
     it('should return false', () => {
-      const block = Block.mineBlock({
+      const block = Block.mine({
         lastBlock: Block.genesis(),
         data: 'some-data'
       });

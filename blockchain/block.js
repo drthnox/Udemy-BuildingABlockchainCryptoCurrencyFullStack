@@ -17,7 +17,7 @@ class Block {
     return new this(GENESIS_BLOCK_DATA);
   }
 
-  static mineBlock({ lastBlock, data }) {
+  static mine({ lastBlock, data }) {
     const lastHash = lastBlock.hash;
     let {difficulty} = lastBlock;
     let nonce = 0;

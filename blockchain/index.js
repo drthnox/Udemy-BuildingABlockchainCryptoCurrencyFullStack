@@ -8,10 +8,10 @@ class Blockchain {
     this.chain = [Block.genesis()];
   }
 
-  addBlock({ data }) {
+  addBlock({ data: block }) {
     const lastBlock = this.chain[this.chain.length - 1];
-    const newBlock = Block.mineBlock({
-      data: data,
+    const newBlock = Block.mine({
+      data: block,
       lastBlock: lastBlock
     });
     this.chain.push(newBlock);

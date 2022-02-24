@@ -10,12 +10,19 @@ describe('Testing the Blockchain', () => {
     blockchain = new Blockchain();
     newChain = new Blockchain();
     originalChain = blockchain.chain;
+    mockConsole();
   });
+
+  function mockConsole() {
+    errMock = jest.fn();
+    logMock = jest.fn();
+    global.console.error = errMock;
+    global.console.log = logMock;
+  }
 
   it('should be an instance of Blockchain', () => {
     expect(blockchain instanceof Blockchain).toBe(true);
   });
-
   it('should contain a chain array', () => {
     expect(blockchain.chain instanceof Array).toBe(true);
   });
