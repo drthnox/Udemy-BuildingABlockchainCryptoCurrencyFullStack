@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.1",
+    "collections": "^5.1.13",
     "elliptic": "^6.5.4",
     "express": "^4.17.2",
     "hex-to-binary": "^1.0.1",
@@ -32,6 +33,8 @@
     "nodemon": "^2.0.15",
     "redis-mock": "^0.56.3",
     "request": "^2.88.2",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "uuid": "^8.3.2",
+    "uuidv4": "^6.2.12"
   }
 }
