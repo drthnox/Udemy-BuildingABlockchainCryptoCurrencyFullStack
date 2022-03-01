@@ -1,6 +1,6 @@
-const { intFromLE } = require('elliptic/lib/elliptic/utils');
 const Wallet = require('.');
 const Transaction = require('./transaction');
+const should = require('should');
 
 describe('Transaction', () => {
   let transaction,
@@ -21,20 +21,21 @@ describe('Transaction', () => {
   });
 
   it('should have an `id`', () => {
-    expect(transaction).toHaveProperty('id');
+    transaction.should.have.property('id');
   });
 
   describe('outputMap', () => {
     it('has an `outputMap`', () => {
-      expect(transaction).toHaveProperty('outputMap');
+      transaction.should.have.property('outputMap');
     });
 
-    // it('outputs the amount to the recipient', () => {
-    //   expect(transaction.outputMap[recipient]).toEqual(amount);
-    // });
-    // it('outputs the remaining balance for the `senderWallet`', () => {
-    //   expect(transaction.outputMap[senderWallet.publicKey]).toEqual(senderWallet.balance - amount);
-    // });
+    it('outputs the amount to the recipient', () => {
+      transaction.outputMap.should.have.value(recipient, amount);
+    });
+
+    it('outputs the remaining balance for the `senderWallet`', () => {
+      transaction.outputMap.should.have.value(senderWallet.publicKey, senderWallet.balance - amount);
+    });
   });
 
 });
