@@ -29,7 +29,7 @@ describe('Transaction', () => {
       transaction.should.have.property('outputMap');
     });
 
-    it('outputs the amount to the recipient', () => {
+    it('outputs the `amount` to the `recipient`', () => {
       transaction.outputMap.should.have.value(recipient, amount);
     });
 
