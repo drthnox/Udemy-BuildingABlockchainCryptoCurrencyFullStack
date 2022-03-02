@@ -3,18 +3,20 @@ const Map = require('collections/map');
 // const Dict = require('collections/dict');
 
 class Transaction {
-  constructor({
-    senderWallet: senderWallet,
-    recipient: recipient,
-    amount: amount
-  }) {
-    this.senderWallet = senderWallet;
-    this.recipient = recipient;
-    this.amount = amount;
+  constructor({senderWallet: senderWallet, recipient: recipient, amount: amount}) {
     this.id = uuid();
-    this.outputMap = new Map();
-    this.outputMap.add(this.amount, this.recipient);
-    this.outputMap.add(this.senderWallet.balance - amount, this.senderWallet.publicKey);
+    this.outputMap = this.createOutputMap({
+      senderWallet: senderWallet,
+      recipient: recipient,
+      amount: amount
+    });
+  }
+
+  createOutputMap({senderWallet: senderWallet,recipient: recipient,amount: amount}) {
+    const outputMap = {};
+    outputMap[recipient] = amount;
+    outputMap[senderWallet.publicKey] = senderWallet.balance - amount;
+    return outputMap;
   }
 }
 
