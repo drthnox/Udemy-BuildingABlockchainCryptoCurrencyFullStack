@@ -50,12 +50,12 @@ describe('Transaction', () => {
     });
 
     it('sets the `amount` to the `senderWallet` balance', () => {
-      (transaction.input).should.have.property(amount, senderWallet.balance);
+      (transaction.input).should.have.property('amount', senderWallet.balance);
     });
 
-  //   it('sets the `address` to the `senderWallet` publicKey', () => {
-  //     transaction.input.address.should.equal(senderWallet.publicKey);
-  //   });
+    it('sets the `address` to the `senderWallet` publicKey', () => {
+      (transaction.input).should.have.property('address', senderWallet.publicKey);
+    });
 
   //   it('signs the input', () => {
   //     verifySignature({

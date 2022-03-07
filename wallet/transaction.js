@@ -1,10 +1,10 @@
-const { uuid } = require('uuidv4');
 const Map = require('collections/map');
 // const Dict = require('collections/dict');
+const { v4: uuidv4 } = require('uuid');
 
 class Transaction {
   constructor({senderWallet: senderWallet, recipient: recipient, amount: amount}) {
-    this.id = uuid();
+    this.id = uuidv4();
     this.outputMap = this.createOutputMap({
       senderWallet: senderWallet,
       recipient: recipient,
@@ -12,7 +12,8 @@ class Transaction {
     });
     this.input = {};
     this.input['timestamp'] = 0;
-    this.input[amount] = senderWallet.balance;
+    this.input['amount'] = senderWallet.balance;
+    this.input['address'] = senderWallet.publicKey;
   }
 
   createOutputMap({senderWallet: senderWallet,recipient: recipient,amount: amount}) {
