@@ -1,6 +1,8 @@
 const Wallet = require('.');
 const Transaction = require('./transaction');
 const should = require('should');
+const version = require('nodemon/lib/version');
+const { verifySignature } = require('../util');
 
 describe('Transaction', () => {
   let transaction,
@@ -38,4 +40,29 @@ describe('Transaction', () => {
     });
   });
 
+  describe('input', () => {
+    it('has an `input`', () => {
+      transaction.should.have.property('input');
+    });
+
+    it('has a `timestamp` in the input', () => {
+      (transaction.input).should.have.property('timestamp',0);
+    });
+
+    it('sets the `amount` to the `senderWallet` balance', () => {
+      (transaction.input).should.have.property(amount, senderWallet.balance);
+    });
+
+  //   it('sets the `address` to the `senderWallet` publicKey', () => {
+  //     transaction.input.address.should.equal(senderWallet.publicKey);
+  //   });
+
+  //   it('signs the input', () => {
+  //     verifySignature({
+  //       publicKey: senderWallet.publicKey,
+  //       data: transaction.outputMap,
+  //       signature: transaction.input.signature
+  //     }).should.be.true();
+  //   });
+  });
 });

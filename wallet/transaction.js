@@ -10,6 +10,9 @@ class Transaction {
       recipient: recipient,
       amount: amount
     });
+    this.input = {};
+    this.input['timestamp'] = 0;
+    this.input[amount] = senderWallet.balance;
   }
 
   createOutputMap({senderWallet: senderWallet,recipient: recipient,amount: amount}) {
