@@ -46,7 +46,7 @@ describe('Transaction', () => {
     });
 
     it('has a `timestamp` in the input', () => {
-      (transaction.input).should.have.property('timestamp',0);
+      (transaction.input).should.have.property('timestamp');
     });
 
     it('sets the `amount` to the `senderWallet` balance', () => {
@@ -57,12 +57,12 @@ describe('Transaction', () => {
       (transaction.input).should.have.property('address', senderWallet.publicKey);
     });
 
-  //   it('signs the input', () => {
-  //     verifySignature({
-  //       publicKey: senderWallet.publicKey,
-  //       data: transaction.outputMap,
-  //       signature: transaction.input.signature
-  //     }).should.be.true();
-  //   });
+    it('signs the input', () => {
+      verifySignature({
+        publicKey: senderWallet.publicKey,
+        data: transaction.outputMap,
+        signature: transaction.input.signature
+      }).should.be.true();
+    });
   });
 });

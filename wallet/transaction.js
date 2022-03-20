@@ -10,15 +10,19 @@ class Transaction {
       recipient: recipient,
       amount: amount
     });
-    this.input = this.createInputMap({senderWallet: senderWallet});
+    this.input = this.createInputMap({
+      senderWallet: senderWallet,
+      outputMap: this.outputMap
+    });
   }
 
-  createInputMap({senderWallet: senderWallet}) {
-    const input = {};
-    input['timestamp'] = 0;
-    input['amount'] = senderWallet.balance;
-    input['address'] = senderWallet.publicKey;
-    return input;
+  createInputMap({senderWallet: senderWallet, outputMap}) {
+    return ({
+      timestamp: Date.now(),
+      amount: senderWallet.balance,
+      address: senderWallet.publicKey,
+      signature: senderWallet.sign(outputMap)
+    });
   }
 
   createOutputMap({senderWallet: senderWallet,recipient: recipient,amount: amount}) {
