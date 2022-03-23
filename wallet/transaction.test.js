@@ -1,6 +1,6 @@
 const Wallet = require('.');
 const Transaction = require('./transaction');
-const should = require('should');
+var should = require('should');
 const version = require('nodemon/lib/version');
 const { verifySignature } = require('../util');
 
@@ -64,5 +64,45 @@ describe('Transaction', () => {
         signature: transaction.input.signature
       }).should.be.true();
     });
+  });
+
+  describe('validate', () => {
+    let errorMock, errSpy;
+
+    beforeEach(() => {
+      errorMock = jest.fn();
+      errSpy = jest.spyOn(console, 'error');
+    });
+    describe('when the transaction is valid', () => {
+      // only valid when the fields have not ben tampered
+      it('returns true', () => {
+        var isValid = Transaction.validate(transaction);
+
+        isValid.should.be.true();
+      });
+    });
+    describe('when the transaction is invalid', () => {
+      describe('and a transaction outputMap is invalid', () => {
+        it('returns false and logs an error', () => {
+          transaction.outputMap[senderWallet.publicKey] = 999999;
+
+          var isValid = Transaction.validate(transaction);
+
+          expect(errSpy).toBeCalled();
+          isValid.should.be.false();
+        });
+      });
+      describe('and the transaction input signature is invalid', () => {
+        it('returns false and logs an error', () => {
+          transaction.input.signature = new Wallet().sign('data');
+
+          var isValid = Transaction.validate(transaction);
+
+          expect(errSpy).toBeCalled();
+          isValid.should.be.false();
+        });
+      });
+    });
+
   });
 });
