@@ -1,6 +1,7 @@
 const { STARTING_BALANCE } = require('../config');
 const { cryptoHash } = require('../util');
 const { ec }  = require('../util');
+const Transaction = require('./transaction');
 
 class Wallet {
   constructor() {
@@ -11,6 +12,14 @@ class Wallet {
 
   sign(data) {
     return this.keyPair.sign(cryptoHash(data));
+  }
+
+  createTransaction({amount, recipient}) {
+    return new Transaction({
+      senderWallet: this,
+      recipient: recipient,
+      amount: amount
+    });
   }
 
 }
