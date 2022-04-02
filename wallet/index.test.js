@@ -13,7 +13,7 @@ describe('Wallet', () => {
   });
 
   it('has a `balance`', () => {
-    wallet.shoud.have.property('balance');
+    wallet.should.have.property('balance');
     wallet.balance.should.be.equal(STARTING_BALANCE);
   });
 

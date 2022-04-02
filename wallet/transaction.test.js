@@ -22,8 +22,10 @@ describe('Transaction', () => {
     });
   });
 
-  it('should have an `id`', () => {
-    transaction.should.have.property('id');
+  describe('constructor()', () => {
+    it('should have an id', () => {
+      transaction.should.have.property('id');
+    });
   });
 
   describe('outputMap', () => {
@@ -66,7 +68,7 @@ describe('Transaction', () => {
     });
   });
 
-  describe('validate', () => {
+  describe('validate()', () => {
     let errorMock, errSpy;
 
     beforeEach(() => {
@@ -104,5 +106,24 @@ describe('Transaction', () => {
       });
     });
 
+  });
+
+  describe('update()', () => {
+    let nextRecipient;
+    let nextAmount = 123;
+
+    beforeEach(() => {
+      this.nextRecipient = 'next-recipient';
+    });
+
+    it('outputs the amount to the next recipient', () => {
+      transaction.update({senderWallet, amount: nextAmount, recipient: nextRecipient});
+
+      transaction.outputMap[nextRecipient].should.be.equal(nextAmount);
+    });
+
+    it('subtracts the amount from the original sender output amount', () => {});
+    it('maintains a total output that matches the input amount', () => {});
+    it('re-signs the transaction', () => {});
   });
 });

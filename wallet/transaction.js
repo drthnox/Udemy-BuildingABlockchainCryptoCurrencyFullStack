@@ -50,6 +50,10 @@ class Transaction {
     }
     return true;
   }
+
+  update({senderWallet, amount, recipient}) {
+    this.outputMap[recipient] = amount;
+  }
 }
 
 module.exports = Transaction;
