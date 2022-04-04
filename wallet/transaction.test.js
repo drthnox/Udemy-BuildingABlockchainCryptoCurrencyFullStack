@@ -111,19 +111,34 @@ describe('Transaction', () => {
   describe('update()', () => {
     let nextRecipient;
     let nextAmount = 123;
+    let originalSenderOutput;
+    let originalSignature;
 
     beforeEach(() => {
+      originalSenderOutput  = transaction.outputMap[senderWallet.publicKey];
+      originalSignature = transaction.signature;
       this.nextRecipient = 'next-recipient';
+      transaction.update({senderWallet, amount: nextAmount, recipient: nextRecipient});
     });
 
     it('outputs the amount to the next recipient', () => {
-      transaction.update({senderWallet, amount: nextAmount, recipient: nextRecipient});
-
       transaction.outputMap[nextRecipient].should.be.equal(nextAmount);
     });
 
-    it('subtracts the amount from the original sender output amount', () => {});
-    it('maintains a total output that matches the input amount', () => {});
-    it('re-signs the transaction', () => {});
+    it('subtracts the amount from the original sender output amount', () => {
+      transaction.outputMap[senderWallet.publicKey].should.be.equal(originalSenderOutput - nextAmount);
+    });
+
+    it('maintains a total output that matches the input amount', () => {
+      Object.values(transaction.outputMap)
+        .reduce((accumulatedTotal, outputAmount) => accumulatedTotal + outputAmount)
+        .should.be.equal(transaction.input.amount);
+    });
+
+    it('re-signs the transaction', () => {
+      console.log('original signature', originalSignature);
+      console.log('new signature', transaction.input.signature);
+      transaction.input.signature.should.not.be.equal(originalSignature);
+    });
   });
 });
