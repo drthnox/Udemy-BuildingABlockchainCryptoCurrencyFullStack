@@ -115,21 +115,25 @@ describe('Transaction', () => {
 
     describe('and the amount is invalid', () => {
       it('should throw an error if the amount specified exceeds the balance', () => {
-        // expect(transaction.update({
-        //   senderWallet, amount: 99999, recipient: 'foo'
-        // })).toThrow('Amount exceeds balance');
+        try {
+          transaction.update({
+            senderWallet, amount: 99999, recipient: 'foo'
+          });
+        } catch (err) {
+          err.message.should.be.equal('Amount exceeds balance');
+        }
       });
     });
 
     describe('and the amount is valid', () => {
 
       beforeEach(() => {
-        originalSenderOutput  = transaction.outputMap[senderWallet.publicKey];
+        originalSenderOutput = transaction.outputMap[senderWallet.publicKey];
         originalSignature = transaction.input.signature;
         nextRecipient = 'next-recipient';
         nextAmount = 50;
 
-        transaction.update({senderWallet, amount: nextAmount, recipient: nextRecipient});
+        transaction.update({ senderWallet, amount: nextAmount, recipient: nextRecipient });
       });
 
       it('should output the amount to the next recipient', () => {
