@@ -18,11 +18,15 @@ class Wallet {
     if(amount > this.balance) {
       throw new Error('Amount exceeds balance');
     }
-    return new Transaction({
+    console.log('createTransaction recipient', recipient);
+    console.log('createTransaction amount', amount);
+    const txn = new Transaction({
       senderWallet: this,
       recipient: recipient,
       amount: amount
     });
+    console.log('wallet created new transaction', txn);
+    return txn;
   }
 
 }

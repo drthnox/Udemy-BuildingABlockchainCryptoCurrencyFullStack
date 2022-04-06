@@ -1,3 +1,4 @@
+const { length } = require('body-parser');
 const Map = require('collections/map');
 // const Dict = require('collections/dict');
 const { v4: uuidv4 } = require('uuid');
@@ -6,6 +7,9 @@ const { verifySignature } = require('../util');
 class Transaction {
   constructor({ senderWallet: senderWallet, recipient: recipient, amount: amount }) {
     this.id = uuidv4();
+    console.log('senderWallet', senderWallet);
+    console.log('recipient', recipient);
+    console.log('amount', amount);
     this.outputMap = this.createOutputMap({
       senderWallet: senderWallet,
       recipient: recipient,
@@ -27,9 +31,12 @@ class Transaction {
   }
 
   createOutputMap({ senderWallet: senderWallet, recipient: recipient, amount: amount }) {
-    const outputMap = {};
+    let outputMap = {};
+    console.log('createOutputMap recipient', recipient);
+    console.log('createOutputMap amount', amount);
     outputMap[recipient] = amount;
     outputMap[senderWallet.publicKey] = senderWallet.balance - amount;
+    console.log('creating outputMap', outputMap);
     return outputMap;
   }
 
@@ -57,7 +64,7 @@ class Transaction {
       throw new Error('Amount exceeds balance');
     }
 
-    if(!this.outputMap[recipient]) {
+    if (!this.outputMap[recipient]) {
       this.outputMap[recipient] = amount;
     } else {
       this.outputMap[recipient] = this.outputMap[recipient] + amount;
