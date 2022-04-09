@@ -5,12 +5,13 @@ var should = require('should');
 
 describe('TransactionPool', () => {
 
-  let transactionPool, transaction;
+  let transactionPool, transaction, senderWallet;
 
   beforeEach(() => {
     transactionPool = new TransactionPool();
+    senderWallet = new Wallet();
     transaction = new Transaction({
-      senderWallet: new Wallet(),
+      senderWallet: senderWallet,
       recipient: 'fake-recipient',
       amount: 50
     });
@@ -25,7 +26,7 @@ describe('TransactionPool', () => {
   describe('addTransaction()', () => {
     it('should add a new transaction to the transaction pool', () => {
       transactionPool.addTransaction(transaction);
-      console.log('>>>> ', transactionPool.transactionMap.get(transaction.id));
+
       transactionPool.transactionMap.get(transaction.id).should.be.equal(transaction);
     });
   });
@@ -33,19 +34,15 @@ describe('TransactionPool', () => {
   describe('transactionExists()', () => {
 
     beforeEach(() => {
-      transactionPool.addTransaction(transaction);
+      transactionPool.setTransaction(transaction);
     });
 
-    it('should contain a transaction with a given input address', () => {
-      const inputAddress = transaction.input.address;
-      console.log(inputAddress);
-
-      transactionPool.transactionExists({ inputAddress }).should.not.be.null();
+    it('should return an existing transaction with a given input address', () => {
+      transactionPool.transactionExists({ inputAddress: senderWallet.publicKey }).should.be.equal(transaction);
     });
 
-    it('should not contain any transaction with non-existent input address', () => {
+    it('should return null for any non-existent input address', () => {
       const inputAddress = 99999;
-      console.log(inputAddress);
 
       expect(transactionPool.transactionExists({ inputAddress })).toEqual(null);
     });
