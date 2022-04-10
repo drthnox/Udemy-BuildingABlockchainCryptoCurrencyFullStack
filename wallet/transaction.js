@@ -7,9 +7,6 @@ const { verifySignature } = require('../util');
 class Transaction {
   constructor({ senderWallet: senderWallet, recipient: recipient, amount: amount }) {
     this.id = uuidv4();
-    console.log('senderWallet', senderWallet);
-    console.log('recipient', recipient);
-    console.log('amount', amount);
     this.outputMap = this.createOutputMap({
       senderWallet: senderWallet,
       recipient: recipient,
@@ -32,11 +29,8 @@ class Transaction {
 
   createOutputMap({ senderWallet: senderWallet, recipient: recipient, amount: amount }) {
     let outputMap = {};
-    console.log('createOutputMap recipient', recipient);
-    console.log('createOutputMap amount', amount);
     outputMap[recipient] = amount;
     outputMap[senderWallet.publicKey] = senderWallet.balance - amount;
-    console.log('creating outputMap', outputMap);
     return outputMap;
   }
 
@@ -44,7 +38,6 @@ class Transaction {
     const { input, outputMap } = transaction;
     const { address, amount, signature } = input;
     const outputTotal = Object.values(outputMap).reduce((total, amount) => {
-      console.log('using amount of', amount);
       return total + amount;
     });
     if (amount !== outputTotal) {

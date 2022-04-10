@@ -11,12 +11,13 @@ class TransactionPool {
   }
 
   setTransaction(transaction) {
+    console.log('set transaction called', transaction.id);
     this.transactionMap.set(transaction.id, transaction);
     console.log(this.transactionMap.get(transaction.id));
   }
 
   getTransaction(transactionId) {
-    console.log(this.transactionMap[transactionId]);
+    console.log('Retriving transaction with id', transactionId);
     return this.transactionMap.get(transactionId);
   }
 
@@ -30,6 +31,11 @@ class TransactionPool {
     }
 
     return null;
+  }
+
+  setMap(transactionMap) {
+    console.log('Replacing transaction map on a sync with', transactionMap);
+    this.transactionMap = transactionMap;
   }
 }
 

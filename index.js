@@ -11,9 +11,9 @@ const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 const app = express();
 const blockchain = new Blockchain();
-const pubsub = new PubSub({ blockchain });
 const wallet = new Wallet();
 const transactionPool = new TransactionPool();
+const pubsub = new PubSub({ blockchain, transactionPool });
 
 app.use(bodyParser.json());
 
@@ -29,22 +29,33 @@ app.post('/api/mine', (req, res) => {
 });
 
 app.post('/api/transact', (req, res) => {
-  const { amount, recipient } = req.body;
 
   let transaction = transactionPool.transactionExists({ input: wallet.publicKey });
 
   try {
+    const { amount, recipient } = req.body;
     if (transaction) {
-      transaction.update({ senderWallet:wallet, amount:amount, recipient:recipient });
+      transaction.update({ senderWallet: wallet, amount: amount, recipient: recipient });
     } else {
       transaction = wallet.createTransaction({ amount: amount, recipient: recipient });
     }
   } catch (error) {
     return res.status(400).json({ type: 'error', message: error.message })
   }
+
   transactionPool.setTransaction(transaction);
+  pubsub.broadcastTransaction(transaction);
   return res.json({ type: 'success', transaction });
 });
+
+app.get('/api/transaction-pool-map', (req, res) => {
+  return res.json(transactionPool.transactionMap);
+});
+
+const syncWithRootState = () => {
+  syncChains();
+  syncTransactionPool();
+};
 
 const syncChains = () => {
   console.log(`Syncing chains with ${ROOT_NODE_ADDRESS}/api/blocks`);
@@ -53,6 +64,17 @@ const syncChains = () => {
       const rootChain = JSON.parse(body);
       console.log('Replacing chain with', rootChain);
       blockchain.replaceChain(rootChain);
+    }
+  });
+};
+
+const syncTransactionPool = () => {
+  console.log(`Syncing transaction pool with ${ROOT_NODE_ADDRESS}/api/transaction-pool-map`);
+  request({ url: `${ROOT_NODE_ADDRESS}/api/transaction-pool-map` }, (error, response, body) => {
+    if (!error && response.statusCode == 200) {
+      const rootTransactionPoolMap = JSON.parse(body);
+      console.log('Replacing transation pool map with', rootTransactionPoolMap);
+      transactionPool.setMap(rootTransactionPoolMap);
     }
   });
 };
@@ -67,6 +89,6 @@ app.listen(PORT, () => {
   console.log(`Listening on localhost:${PORT}`);
   if (PORT !== DEFAULT_PORT) {
     console.log(`${PORT} <> ${DEFAULT_PORT}`);
-    syncChains();
+    syncWithRootState();
   }
 });

@@ -49,7 +49,7 @@ class Blockchain {
   }
 
   replaceChain(newChain) {
-    // console.log('Attempting to replace chain');
+
     if(newChain.length <= this.chain.length) {
       console.error('Incoming chain is same length or shorter. Not replacing.');
       return;
