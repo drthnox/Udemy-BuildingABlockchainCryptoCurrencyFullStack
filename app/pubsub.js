@@ -33,17 +33,21 @@ class PubSub {
 
   handleMessage({ channel, message }) {
     if (message !== undefined) {
-      const parsedMessage = JSON.parse(message);
-      console.log('Message received:', parsedMessage);
-      switch (channel) {
-        case CHANNELS.BLOCKCHAIN:
-          this.blockchain.replaceChain(parsedMessage);
-          break;
-        case CHANNELS.TRANSACTION:
-          this.transactionPool.setTransaction(parsedMessage);
-          break;
-        default:
-          return;
+      try {
+        const parsedMessage = JSON.parse(message);
+        console.log('Message received:', parsedMessage);
+        switch (channel) {
+          case CHANNELS.BLOCKCHAIN:
+            this.blockchain.replaceChain(parsedMessage);
+            break;
+          case CHANNELS.TRANSACTION:
+            this.transactionPool.setTransaction(parsedMessage);
+            break;
+          default:
+            return;
+        }
+      } catch (error) {
+        console.error(error.message);
       }
     }
   }

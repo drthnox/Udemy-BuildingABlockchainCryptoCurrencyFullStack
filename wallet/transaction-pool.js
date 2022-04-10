@@ -1,4 +1,5 @@
 const Map = require('collections/map');
+const Transaction = require('./transaction');
 
 class TransactionPool {
 
@@ -36,6 +37,17 @@ class TransactionPool {
   setMap(transactionMap) {
     console.log('Replacing transaction map on a sync with', transactionMap);
     this.transactionMap = transactionMap;
+  }
+
+  validTransactions() {
+    let validTransactions = [];
+    let transactions = this.transactionMap.values();
+    for(let t of transactions) {
+      if(Transaction.validate(t)) {
+        validTransactions.push(t);
+      }
+    }
+    return validTransactions;
   }
 }
 

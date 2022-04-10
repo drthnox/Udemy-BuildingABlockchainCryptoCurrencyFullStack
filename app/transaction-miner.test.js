@@ -7,14 +7,21 @@ const PubSub = require('./pubsub');
 
 describe('TransactionMiner', () => {
 
+  let blockchain;
+  let transactionPool;
+  let wallet;
+  let pubsub;
+  let transactionMiner;
+
+  beforeEach(() => {
+    blockchain = new Blockchain();
+    transactionPool = new TransactionPool();
+    wallet = new Wallet();
+    pubsub = new PubSub({ blockchain, transactionPool });
+    transactionMiner = new TransactionMiner({ blockchain, transactionPool, wallet, pubsub });
+  });
+
   it('constructor', () => {
-    let blockchain = new Blockchain();
-    let transactionPool = new TransactionPool();
-    let wallet = new Wallet();
-    let pubsub = new PubSub({ blockchain, transactionPool });
-
-    const transactionMiner = new TransactionMiner({ blockchain, transactionPool, wallet, pubsub });
-
     transactionMiner.should.be.instanceOf(TransactionMiner);
     transactionMiner.should.have.property('blockchain');
     transactionMiner.should.have.property('transactionPool');
