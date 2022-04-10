@@ -2,6 +2,7 @@ const TransactionPool = require('./transaction-pool');
 const Transaction = require('./transaction');
 const Wallet = require('./index');
 var should = require('should');
+const GlobalSet = require('collections/_set');
 
 describe('TransactionPool', () => {
 
@@ -50,8 +51,11 @@ describe('TransactionPool', () => {
 
   describe('validTransactions()', () => {
     let validTransactions;
+    let errorMock;
 
     beforeEach(() => {
+      errorMock = jest.fn();
+      global.console.error = errorMock;
       validTransactions = [];
 
       for (let i = 0; i < 10; i++) {
@@ -77,6 +81,12 @@ describe('TransactionPool', () => {
 
     it('should return valid transactions', () => {
       expect(transactionPool.validTransactions()).toEqual(validTransactions);
+    });
+
+    it('should log an error for an invalid transaction', () => {
+      transactionPool.validTransactions();
+
+      expect(errorMock).toHaveBeenCalled();
     });
   });
 });
