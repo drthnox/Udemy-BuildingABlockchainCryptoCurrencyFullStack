@@ -49,6 +49,10 @@ class TransactionPool {
     }
     return validTransactions;
   }
+
+  clear() {
+    this.transactionMap.clear();
+  }
 }
 
 

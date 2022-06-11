@@ -89,4 +89,12 @@ describe('TransactionPool', () => {
       expect(errorMock).toHaveBeenCalled();
     });
   });
+
+  describe('clear()', () => {
+    it('should clear the transactions', () => {
+      transactionPool.clear();
+
+      transactionPool.transactionMap.should.be.empty();
+    });
+  });
 });
