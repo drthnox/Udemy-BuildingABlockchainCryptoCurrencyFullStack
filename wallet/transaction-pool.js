@@ -53,6 +53,19 @@ class TransactionPool {
   clear() {
     this.transactionMap.clear();
   }
+
+  clearBlockchainTransactions({chain}) {
+    for(let i=1;i<chain.length; i++) { // Skip the genesis block (0)
+      const block = chain[i];
+      for(let transaction of block.data) {
+        console.log('Checking transaction', transaction.id);
+        if(this.transactionMap.get(transaction.id)) {
+          console.log('Deleting', transaction.id);
+          this.transactionMap.delete(transaction.id);
+        }
+      }
+    }
+  }
 }
 
 

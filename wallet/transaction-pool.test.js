@@ -2,7 +2,8 @@ const TransactionPool = require('./transaction-pool');
 const Transaction = require('./transaction');
 const Wallet = require('./index');
 var should = require('should');
-const GlobalSet = require('collections/_set');
+// const GlobalSet = require('collections/_set');
+const Blockchain = require('../blockchain');
 
 describe('TransactionPool', () => {
 
@@ -95,6 +96,26 @@ describe('TransactionPool', () => {
       transactionPool.clear();
 
       transactionPool.transactionMap.should.be.empty();
+    });
+  });
+
+  describe('clearBlockchainTransactions()', () => {
+    it('should only clear the pool of any existing blockchain transactions', () => {
+      const blockchain = new Blockchain();
+      const expectedTransactionMap = new Map();
+      for (let i = 0; i < 6; i++) {
+        const transaction = new Wallet().createTransaction({ recipient: 'foo', amount: 20 });
+        transactionPool.setTransaction(transaction);
+        if (i % 2 === 0) {
+          blockchain.addBlock({ data: [transaction] });
+        } else {
+          expectedTransactionMap.set(transaction.id, transaction);
+        }
+      }
+
+      transactionPool.clearBlockchainTransactions({ chain: blockchain.chain });
+
+      expect(transactionPool.transactionMap).toEqual(expectedTransactionMap);
     });
   });
 });
