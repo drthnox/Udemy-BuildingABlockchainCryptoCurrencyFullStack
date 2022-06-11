@@ -55,13 +55,13 @@ describe('PubSub()', () => {
     });
 
     it('should attempt to replace the chain if a message is received on the BLOCKCHAIN channel', () => {
-      const blockchainSpy = jest.spyOn(blockchain, 'replaceChain');
-      const parseSpy = jest.spyOn(JSON, 'parse');
+      const replaceChain = jest.spyOn(blockchain, 'replaceChain');
+      const parse = jest.spyOn(JSON, 'parse');
 
       pubsub.handleMessage({ channel: CHANNELS.BLOCKCHAIN, message: JSON.stringify(blockchain.chain)});
 
-      expect(parseSpy).toHaveBeenCalledWith(JSON.stringify(blockchain.chain));
-      expect(blockchainSpy).toHaveBeenCalledWith(blockchain.chain);
+      expect(parse).toHaveBeenCalledWith(JSON.stringify(blockchain.chain));
+      expect(replaceChain).toBeCalled();
       expect(errMock).toBeCalled();
     });
   });
