@@ -39,7 +39,7 @@ app.post('/api/transact', (req, res) => {
     if (transaction) {
       transaction.update({ senderWallet: wallet, amount: amount, recipient: recipient });
     } else {
-      transaction = wallet.createTransaction({ amount: amount, recipient: recipient });
+      transaction = wallet.createTransaction({ amount: amount, recipient: recipient, chain: blockchain.chain });
     }
   } catch (error) {
     return res.status(400).json({ type: 'error', message: error.message })
