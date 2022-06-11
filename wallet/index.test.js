@@ -3,6 +3,7 @@ const Wallet = require('./index');
 const { verifySignature } = require('../util');
 const Transaction = require('./transaction');
 var should = require('should');
+var Blockchain = require('../blockchain');
 
 describe('Wallet', () => {
 
@@ -55,7 +56,7 @@ describe('Wallet', () => {
   describe('createTransaction()', () => {
     describe('and the amount exceeds the balance', () => {
       it('throws an error', () => {
-        expect(() => wallet.createTransaction({amount:999999, recipient: 'some-recipient'})).toThrow('Amount exceeds balance');
+        expect(() => wallet.createTransaction({ amount: 999999, recipient: 'some-recipient' })).toThrow('Amount exceeds balance');
       });
     });
 
@@ -66,7 +67,7 @@ describe('Wallet', () => {
       beforeEach(() => {
         amount = 50;
         recipient = 'some-recipient';
-        transaction = wallet.createTransaction({amount, recipient});
+        transaction = wallet.createTransaction({ amount, recipient });
       });
 
       it('creates an instance of `Transaction`', () => {
@@ -81,5 +82,59 @@ describe('Wallet', () => {
         transaction.outputMap[recipient].should.be.equal(amount);
       });
     });
+  });
+
+  describe('calculateBalance()', () => {
+    let blockchain;
+
+    beforeEach(() => {
+      blockchain = new Blockchain();
+    });
+
+    describe('and there are no outputs for the Wallet', () => {
+
+      it('should return the `STARTING_BALANCE`', () => {
+        expect(
+          Wallet.calculateBalance({
+            chain: blockchain.chain,
+            address: wallet.publicKey
+          })
+        ).toEqual(STARTING_BALANCE);
+      });
+
+    });
+
+    describe('and there are outputs for the Wallet', () => {
+
+      let transactionOne, transactionTwo;
+
+      beforeEach(() => {
+        transactionOne = new Wallet().createTransaction({
+          recipient: wallet.publicKey,
+          amount: 50
+        });
+        transactionTwo = new Wallet().createTransaction({
+          recipient: wallet.publicKey,
+          amount: 60
+        });
+
+        blockchain.addBlock({data: [transactionOne, transactionTwo]});
+      });
+
+      it('should add the sum of all outputs to the wallet balance', () => {
+        expect(
+          Wallet.calculateBalance({
+            chain: blockchain.chain,
+            address: wallet.publicKey
+          })
+        ).toEqual(
+          STARTING_BALANCE +
+          transactionOne.outputMap[wallet.publicKey] +
+          transactionTwo.outputMap[wallet.publicKey]
+        )
+      });
+
+    });
+
   });
 });
