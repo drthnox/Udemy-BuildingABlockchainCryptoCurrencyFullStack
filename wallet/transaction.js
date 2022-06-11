@@ -2,17 +2,24 @@ const { length } = require('body-parser');
 const Map = require('collections/map');
 // const Dict = require('collections/dict');
 const { v4: uuidv4 } = require('uuid');
+const { REWARD_INPUT, MINING_REWARD } = require('../config');
 const { verifySignature } = require('../util');
 
 class Transaction {
-  constructor({ senderWallet: senderWallet, recipient: recipient, amount: amount }) {
+  constructor({
+    senderWallet,
+    recipient,
+    amount,
+    outputMap,
+    input
+  }) {
     this.id = uuidv4();
-    this.outputMap = this.createOutputMap({
+    this.outputMap = outputMap || this.createOutputMap({
       senderWallet: senderWallet,
       recipient: recipient,
       amount: amount
     });
-    this.input = this.createInputMap({
+    this.input = input || this.createInputMap({
       senderWallet: senderWallet,
       outputMap: this.outputMap
     });
@@ -65,6 +72,16 @@ class Transaction {
 
     this.outputMap[senderWallet.publicKey] = balance - amount;
     this.input = this.createInputMap({ senderWallet, outputMap: this.outputMap });
+  }
+
+  static rewardTransaction({minerWallet}) {
+    return new this({
+      input: REWARD_INPUT,
+      outputMap: {[minerWallet.publicKey]: MINING_REWARD}
+      // senderWallet: minerWallet,
+      // recipient:minerWallet.address,
+      // amount:minerWallet.amount
+    });
   }
 }
 
