@@ -23,27 +23,27 @@ class Blockchain {
   static isValidChain(chain) {
     console.log('Validating chain...');
     let block = chain[0];
-    if(!lodash.isEqual(block, Block.genesis())) {
+    if (!lodash.isEqual(block, Block.genesis())) {
       console.error('First block is not the genesis block');
       return false;
     }
-    for (let i=1; i<chain.length;i++) {
-      const {timestamp, data, hash, lastHash, nonce, difficulty}  = chain[i];
-      const prevBlock = chain[i-1];
+    for (let i = 1; i < chain.length; i++) {
+      const { timestamp, data, hash, lastHash, nonce, difficulty } = chain[i];
+      const prevBlock = chain[i - 1];
       const actualLastHash = prevBlock.hash;
-      if(lastHash !== actualLastHash) {
+      if (lastHash !== actualLastHash) {
         console.error('Hash mismatch');
         return false;
       }
 
       const possibleDifficultyValues = [prevBlock.difficulty - 1, prevBlock.difficulty + 1];
-      if(!possibleDifficultyValues.includes(difficulty)) {
+      if (!possibleDifficultyValues.includes(difficulty)) {
         console.error('Difficulty value out of range');
         return false;
       }
 
       const validatedHash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
-      if(hash !== validatedHash) {
+      if (hash !== validatedHash) {
         console.error('Invalid hash');
         return false;
       }
@@ -53,21 +53,27 @@ class Blockchain {
 
   replaceChain(newChain, onSuccess) {
 
-    if(newChain.length <= this.chain.length) {
+    if (newChain.length <= this.chain.length) {
       console.error('Incoming chain is same length or shorter. Not replacing.');
       return;
     }
-    if(!Blockchain.isValidChain(newChain)) {
+
+    if (!Blockchain.isValidChain(newChain)) {
       console.error('Incoming chain is invalid');
       return;
     }
 
-    if(onSuccess) {
-      onSuccess();
+    if (!this.validateTransactionData({ newChain })) {
+      console.error('Invalid transaction data in incoming chain');
+      return;
     }
 
-    // console.log('replacing chain with ', newChain);
-    this.chain = newChain;
+    if (onSuccess) {
+      console.log('Replacing chain with ', newChain);
+      onSuccess();
+      this.chain = newChain;
+    }
+
   }
 
   equalTo(otherBlockchain) {
@@ -75,34 +81,34 @@ class Blockchain {
   }
 
   validateTransactionData({ chain }) {
-    for(let i=1;i<chain.length;i++) { // skip the genesis block
+    for (let i = 1; i < chain.length; i++) { // skip the genesis block
       const block = chain[i];
       let rewardTransactionCount = 0;
       const transactionSet = new Set();
 
-      for(let transaction of block.data) {
+      for (let transaction of block.data) {
 
-        if(transactionSet.has(transaction)) {
+        if (transactionSet.has(transaction)) {
           console.error('Duplicate transaction found');
           return false;
         } else {
           transactionSet.add(transaction);
         }
 
-        if(transaction.input.address === REWARD_INPUT.address) {
+        if (transaction.input.address === REWARD_INPUT.address) {
           rewardTransactionCount++;
 
-          if(rewardTransactionCount > 1) {
+          if (rewardTransactionCount > 1) {
             console.error('Miner rewards limit exceeded');
             return false;
           }
 
-          if(Object.values(transaction.outputMap)[0] !== MINING_REWARD) {
+          if (Object.values(transaction.outputMap)[0] !== MINING_REWARD) {
             console.error('Invalid miner reward amount');
             return false;
           }
         } else {
-          if(!Transaction.validate(transaction)) {
+          if (!Transaction.validate(transaction)) {
             console.error('Invalid transaction');
             return false;
           }
@@ -112,7 +118,7 @@ class Blockchain {
             address: transaction.input.address
           });
 
-          if(transaction.input.amount !== realBalance) {
+          if (transaction.input.amount !== realBalance) {
             console.error('Invalid input amount');
             return false;
           }
