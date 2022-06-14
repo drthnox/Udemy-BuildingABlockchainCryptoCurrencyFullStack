@@ -112,9 +112,7 @@ describe('Testing the Blockchain', () => {
 
   describe('replaceChain()', () => {
 
-    let wallet;
-
-    describe('when new chain is shorter', () => {
+    describe('when the incoming chain is not longer', () => {
 
       it('should not replace the chain', () => {
         newChain.chain[0] = { new: 'chain' };
@@ -122,25 +120,19 @@ describe('Testing the Blockchain', () => {
         blockchain.replaceChain(newChain.chain);
 
         expect(blockchain.chain).toEqual(originalChain);
-        expect(errMock).toBeCalled();
       });
 
     });
 
-    describe('when new chain is longer', () => {
-
-      let t1, t2, t3;
+    describe('when incoming chain is longer', () => {
 
       beforeEach(() => {
-        t1 = wallet.createTransaction({ amount: 10, recipient: 'foo-one'});
-        t2 = wallet.createTransaction({ amount: 10, recipient: 'foo-two'});
-        t3 = wallet.createTransaction({ amount: 10, recipient: 'foo-three'});
-        newChain.addBlock({ data: [t1] });
-        newChain.addBlock({ data: [t2] });
-        newChain.addBlock({ data: [t3] });
+        newChain.addBlock({ data: 'one' });
+        newChain.addBlock({ data: 'two' });
+        newChain.addBlock({ data: 'three' });
       });
 
-      describe('and the new chain is invalid', () => {
+      describe('and the incoming chain is invalid', () => {
 
         it('should not replace the chain', () => {
           newChain.chain[2].hash = 'some-fake-hash';
@@ -152,15 +144,27 @@ describe('Testing the Blockchain', () => {
 
       });
 
-      describe('and the new chain is valid', () => {
+      describe('and the incoming chain is valid', () => {
 
         it('should replace the chain', () => {
-          blockchain.replaceChain(newChain.chain);
+          blockchain.replaceChain(newChain.chain, false);
 
           expect(blockchain.chain).toEqual(newChain.chain);
-          expect(logMock).toBeCalled();
         });
 
+      });
+
+      describe('and `validateTransactions` flag is true', () => {
+        it('should call validateTransactionData()', () => {
+          const validateTransactionDataOrig = blockchain.validateTransactionData;
+          const validateTransactionDataMock = jest.fn();
+          blockchain.validateTransactionData = validateTransactionDataMock;
+
+          blockchain.replaceChain(newChain.chain, true);
+
+          expect(validateTransactionDataMock).toBeCalled();
+          blockchain.validateTransactionData = validateTransactionDataOrig;
+        });
       });
     });
 
@@ -214,7 +218,7 @@ describe('Testing the Blockchain', () => {
       describe('and the transaction is not a reward transaction', () => {
         it('should return false and log an error', () => {
           transaction.outputMap[wallet.publicKey] = 999999;
-          newChain.addBlock({data: [transaction, rewardTransaction]});
+          newChain.addBlock({ data: [transaction, rewardTransaction] });
 
           blockchain.validateTransactionData({ chain: newChain.chain }).should.be.equal(false);
 
@@ -239,7 +243,7 @@ describe('Testing the Blockchain', () => {
           },
           outputMap: badOutputMap
         };
-        newChain.addBlock({data: [badTransaction, rewardTransaction]});
+        newChain.addBlock({ data: [badTransaction, rewardTransaction] });
 
         blockchain.validateTransactionData({ chain: newChain.chain }).should.be.equal(false);
 
@@ -249,7 +253,7 @@ describe('Testing the Blockchain', () => {
 
     describe('when a block contains multiple identical transactions', () => {
       it('should return false and log an error', () => {
-        newChain.addBlock({data: [transaction, transaction]});
+        newChain.addBlock({ data: [transaction, transaction] });
 
         blockchain.validateTransactionData({ chain: newChain.chain }).should.be.equal(false);
 
@@ -257,7 +261,7 @@ describe('Testing the Blockchain', () => {
       });
 
       it('should return false and log an error', () => {
-        newChain.addBlock({data: [transaction, transaction, transaction]});
+        newChain.addBlock({ data: [transaction, transaction, transaction] });
 
         blockchain.validateTransactionData({ chain: newChain.chain }).should.be.equal(false);
 
