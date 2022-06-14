@@ -112,11 +112,15 @@ describe('Testing the Blockchain', () => {
 
   describe('replaceChain()', () => {
 
+    let wallet;
+
     describe('when new chain is shorter', () => {
 
       it('should not replace the chain', () => {
         newChain.chain[0] = { new: 'chain' };
+
         blockchain.replaceChain(newChain.chain);
+
         expect(blockchain.chain).toEqual(originalChain);
         expect(errMock).toBeCalled();
       });
@@ -125,10 +129,15 @@ describe('Testing the Blockchain', () => {
 
     describe('when new chain is longer', () => {
 
+      let t1, t2, t3;
+
       beforeEach(() => {
-        newChain.addBlock({ data: 'one' });
-        newChain.addBlock({ data: 'two' });
-        newChain.addBlock({ data: 'three' });
+        t1 = wallet.createTransaction({ amount: 10, recipient: 'foo-one'});
+        t2 = wallet.createTransaction({ amount: 10, recipient: 'foo-two'});
+        t3 = wallet.createTransaction({ amount: 10, recipient: 'foo-three'});
+        newChain.addBlock({ data: [t1] });
+        newChain.addBlock({ data: [t2] });
+        newChain.addBlock({ data: [t3] });
       });
 
       describe('and the new chain is invalid', () => {
