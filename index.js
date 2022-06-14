@@ -1,8 +1,9 @@
 const express = require('express');
+const request = require('request');
+const path = require('path');
 const bodyParser = require('body-parser');
 const Blockchain = require('./blockchain');
 const PubSub = require('./app/pubsub');
-const request = require('request');
 const TransactionPool = require('./wallet/transaction-pool');
 const Transaction = require('./wallet/transaction');
 const Wallet = require('./wallet');
@@ -18,6 +19,7 @@ const pubsub = new PubSub({ blockchain, transactionPool });
 const transactionMiner = new TransactionMiner({ blockchain, transactionPool, wallet, pubsub });
 
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'client')));
 
 app.get('/api/blocks', (req, res) => {
   res.json(blockchain.chain);
@@ -71,7 +73,12 @@ app.get('/api/wallet-info', (req, res) => {
   });
 });
 
+// default for unmatched URLs
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './client/index.html'));
+});
 
+//---------------
 
 const syncWithRootState = () => {
   syncChains();
