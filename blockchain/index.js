@@ -1,6 +1,9 @@
 const Block = require('./block');
 const { cryptoHash } = require('../util');
 const lodash = require('lodash');
+const { REWARD_INPUT, MINING_REWARD } = require('../config');
+const Transaction = require('../wallet/transaction');
+const Wallet = require('../wallet');
 
 class Blockchain {
 
@@ -69,6 +72,44 @@ class Blockchain {
 
   equalTo(otherBlockchain) {
     return lodash.equalTo(this.chain, otherBlockchain.chain);
+  }
+
+  validateTransactionData({ chain }) {
+    for(let i=1;i<chain.length;i++) { // skip the genesis block
+      const block = chain[i];
+      let rewardTransactionCount = 0;
+      for(let transaction of block.data) {
+        if(transaction.input.address === REWARD_INPUT.address) {
+          rewardTransactionCount++;
+
+          if(rewardTransactionCount > 1) {
+            console.error('Miner rewards limit exceeded');
+            return false;
+          }
+
+          if(Object.values(transaction.outputMap)[0] !== MINING_REWARD) {
+            console.error('Invalid miner reward amount');
+            return false;
+          }
+        } else {
+          if(!Transaction.validate(transaction)) {
+            console.error('Invalid transaction');
+            return false;
+          }
+
+          const realBalance = Wallet.calculateBalance({
+            chain: this.chain,
+            address: transaction.input.address
+          });
+
+          if(transaction.input.amount !== realBalance) {
+            console.error('Invalid input amount');
+            return false;
+          }
+        }
+      }
+    }
+    return true;
   }
 }
 
