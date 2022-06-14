@@ -78,7 +78,17 @@ class Blockchain {
     for(let i=1;i<chain.length;i++) { // skip the genesis block
       const block = chain[i];
       let rewardTransactionCount = 0;
+      const transactionSet = new Set();
+
       for(let transaction of block.data) {
+
+        if(transactionSet.has(transaction)) {
+          console.error('Duplicate transaction found');
+          return false;
+        } else {
+          transactionSet.add(transaction);
+        }
+
         if(transaction.input.address === REWARD_INPUT.address) {
           rewardTransactionCount++;
 

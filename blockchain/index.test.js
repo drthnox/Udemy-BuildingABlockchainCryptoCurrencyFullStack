@@ -251,15 +251,23 @@ describe('Testing the Blockchain', () => {
       });
     });
 
-    // describe('when a block contains multiple identical transactions', () => {
-    //   it('should return false and log an error', () => {
-    //     newChain.addBlock({data: [transaction, transaction]});
+    describe('when a block contains multiple identical transactions', () => {
+      it('should return false and log an error', () => {
+        newChain.addBlock({data: [transaction, transaction]});
 
-    //     blockchain.validateTransactionData({ chain: newChain.chain }).should.be.equal(false);
+        blockchain.validateTransactionData({ chain: newChain.chain }).should.be.equal(false);
 
-    //     expect(errMock).toBeCalled();
-    //   });
-    // });
+        expect(errMock).toBeCalled();
+      });
+
+      it('should return false and log an error', () => {
+        newChain.addBlock({data: [transaction, transaction, transaction]});
+
+        blockchain.validateTransactionData({ chain: newChain.chain }).should.be.equal(false);
+
+        expect(errMock).toBeCalled();
+      });
+    });
 
   });
 
