@@ -19,7 +19,7 @@ const pubsub = new PubSub({ blockchain, transactionPool });
 const transactionMiner = new TransactionMiner({ blockchain, transactionPool, wallet, pubsub });
 
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'client')));
+app.use(express.static(path.join(__dirname, 'client/dist')));
 
 app.get('/api/blocks', (req, res) => {
   res.json(blockchain.chain);
@@ -75,7 +75,7 @@ app.get('/api/wallet-info', (req, res) => {
 
 // default for unmatched URLs
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './client/index.html'));
+  res.sendFile(path.join(__dirname, './client/dist/index.html'));
 });
 
 //---------------
