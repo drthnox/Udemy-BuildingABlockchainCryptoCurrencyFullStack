@@ -1,4 +1,6 @@
 {
   "jest.jestCommandLine": "npm run test --",
-  "jestTestExplorer.pathToJest": "node_modules/.bin/jest"
+  "jestTestExplorer.pathToJest": "node_modules/.bin/jest",
+  "files.encoding": "utf8",
+  "files.autoGuessEncoding": true
 }

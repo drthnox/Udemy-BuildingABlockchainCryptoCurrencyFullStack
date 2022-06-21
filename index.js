@@ -7,6 +7,7 @@ const TransactionPool = require('./wallet/transaction-pool');
 const Transaction = require('./wallet/transaction');
 const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner');
+const path = require('path');
 
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
@@ -18,6 +19,7 @@ const pubsub = new PubSub({ blockchain, transactionPool });
 const transactionMiner = new TransactionMiner({ blockchain, transactionPool, wallet, pubsub });
 
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'client')));
 
 app.get('/api/blocks', (req, res) => {
   res.json(blockchain.chain);
@@ -71,7 +73,9 @@ app.get('/api/wallet-info', (req, res) => {
   });
 });
 
-
+app.get('*', (req,res) => {
+  res.sendFile(path.join(__dirname, 'client/index.html'));
+});
 
 const syncWithRootState = () => {
   syncChains();
