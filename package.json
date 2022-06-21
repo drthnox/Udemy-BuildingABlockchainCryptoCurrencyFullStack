@@ -8,7 +8,8 @@
     "start": "node index.js",
     "dev": "npm run start-redis && nodemon index.js",
     "dev-peer": "cross-env GENERATE_PEER_PORT='true' nodemon index.js",
-    "start-redis": "/usr/local/bin/redis-server --daemonize yes"
+    "start-redis": "/usr/local/bin/redis-server --daemonize yes",
+    "build-client": "parcel build client/src/index.html --out-dir client/dist"
   },
   "jest": {
     "testEnvironment": "node"
@@ -32,6 +33,9 @@
     "ioredis-mock": "^5.8.1",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.15",
+    "parcel-bundler": "^1.12.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "redis-mock": "^0.56.3",
     "request": "^2.88.2",
     "should": "^13.2.3",
