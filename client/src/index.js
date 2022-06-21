@@ -1,9 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
+import App from './components/App';
 
 render(
-  <div>
-    cryptochain in react with live update!!!!!!!!~~~11
-  </div>,
+  <App />,
   document.getElementById('root')
 );
