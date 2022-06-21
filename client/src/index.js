@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 
 render(
   <div>
-    cryptochain in react
+    cryptochain in react with live update!!!!!!!!~~~11
   </div>,
   document.getElementById('root')
 );
