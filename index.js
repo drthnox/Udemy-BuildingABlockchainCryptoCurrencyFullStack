@@ -1,8 +1,9 @@
 const express = require('express');
+const request = require('request');
+const path = require('path');
 const bodyParser = require('body-parser');
 const Blockchain = require('./blockchain');
 const PubSub = require('./app/pubsub');
-const request = require('request');
 const TransactionPool = require('./wallet/transaction-pool');
 const Transaction = require('./wallet/transaction');
 const Wallet = require('./wallet');
@@ -73,9 +74,18 @@ app.get('/api/wallet-info', (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 app.get('*', (req,res) => {
   res.sendFile(path.join(__dirname, 'client/dist/index.html'));
 });
+=======
+// default for unmatched URLs
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './client/dist/index.html'));
+});
+
+//---------------
+>>>>>>> d794243422f697f29273a168cf65456b85fd507a
 
 const syncWithRootState = () => {
   syncChains();
