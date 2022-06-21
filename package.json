@@ -27,6 +27,8 @@
     "should-sinon": "^0.0.6"
   },
   "dependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
     "body-parser": "^1.19.1",
     "collections": "^5.1.13",
     "elliptic": "^6.5.4",
