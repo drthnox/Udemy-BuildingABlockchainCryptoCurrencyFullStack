@@ -6,12 +6,13 @@ class App extends Component {
   state = { walletInfo: { address: 'foo-addr', balance: 9999 } };
 
   render() {
+    const {address, balance} = this.state.walletInfo;
+
     return (
       <div>
-        hello
         <div>Wallet Info:</div>
-        {/* <div>Address: {address}</div> */}
-        {/* <div>Balance: {balance}</div> */}
+        <div>Address: {address}</div>
+        <div>Balance: {balance}</div>
       </div>
     );
   }
