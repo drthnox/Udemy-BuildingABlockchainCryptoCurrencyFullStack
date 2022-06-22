@@ -8,9 +8,10 @@ class App extends Component {
   render() {
     return (
       <div>
+        hello
         <div>Wallet Info:</div>
-        <div>Address: {address}</div>
-        <div>Balance: {balance}</div>
+        {/* <div>Address: {address}</div> */}
+        {/* <div>Balance: {balance}</div> */}
       </div>
     );
   }
