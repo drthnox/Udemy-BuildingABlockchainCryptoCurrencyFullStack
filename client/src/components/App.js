@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-
+import Blocks from './Blocks';
 class App extends Component {
 
   state = { walletInfo: { address: 'foo-addr', balance: 9999 } };
@@ -21,6 +21,8 @@ class App extends Component {
         <div>Wallet Info:</div>
         <div>Address: {address}</div>
         <div>Balance: {balance}</div>
+        <br />
+        <Blocks />
       </div>
     );
   }
