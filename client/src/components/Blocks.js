@@ -16,10 +16,16 @@ class Blocks extends Component {
 
   render() {
     console.log('this.state=', this.state);
-    return(
+    return (
       <div>
         <h3>Blocks</h3>
-        <div></div>
+        {
+          this.state.blocks.map(block => {
+            return (
+              <div key={block.hash}>{block.hash}</div>
+            )
+          })
+        }
       </div>
     );
   }
