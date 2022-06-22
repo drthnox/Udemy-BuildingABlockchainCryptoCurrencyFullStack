@@ -69,7 +69,7 @@ describe('Transaction', () => {
   });
 
   describe('validate()', () => {
-    let errSpy;
+    let errSpy, errorMock;
 
     beforeEach(() => {
       errorMock = jest.fn();

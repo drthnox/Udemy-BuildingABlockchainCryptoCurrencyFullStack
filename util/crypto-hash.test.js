@@ -3,6 +3,8 @@ var should = require('should');
 
 describe('cryptoHash()', () => {
 
+  let errMock, logMock;
+
   beforeEach(() => {
     mockConsole();
   });

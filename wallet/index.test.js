@@ -107,6 +107,7 @@ describe('Wallet', () => {
 
   describe('calculateBalance()', () => {
     let blockchain;
+    let recentTransaction;
 
     beforeEach(() => {
       blockchain = new Blockchain();
@@ -157,7 +158,6 @@ describe('Wallet', () => {
     });
 
     describe('and the wallet has made a transaction', () => {
-      let recentTransaction;
 
       beforeEach(() => {
         recentTransaction = wallet.createTransaction({
