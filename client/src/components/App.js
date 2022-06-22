@@ -10,7 +10,7 @@ class App extends Component {
     const api = 'http://localhost:3000/api/wallet-info';
     fetch(api)
       .then(response => response.json())
-      .then(json => this.setState({walletInfo: json}))
+      .then(json => this.setState({ walletInfo: json }))
       // .then(json => console.log('json=',json))
       ;
   }
@@ -18,11 +18,13 @@ class App extends Component {
   render() {
     const { address, balance } = this.state.walletInfo;
     return (
-      <div>
+      <div className='App'>
         <img className='logo' src={logo}></img>
         <br />
-        <div>Address: {address}</div>
-        <div>Balance: {balance}</div>
+        <div className='WalletInfo'>
+          <div>Address: {address}</div>
+          <div>Balance: {balance}</div>
+        </div>
         <br />
         <Blocks />
       </div>
