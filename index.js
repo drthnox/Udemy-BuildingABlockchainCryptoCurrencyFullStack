@@ -20,6 +20,10 @@ const transactionMiner = new TransactionMiner({ blockchain, transactionPool, wal
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'client/dist')));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 
 app.get('/api/blocks', (req, res) => {
   res.json(blockchain.chain);
