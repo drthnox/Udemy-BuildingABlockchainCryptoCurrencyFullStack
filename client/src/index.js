@@ -10,6 +10,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import ConductTransaction from './components/ConductTransaction';
 const container = document.getElementById("root");
 const root = createRoot(container);
 
@@ -18,6 +19,7 @@ root.render(
     <Routes>
       <Route exact={true} path="/" element={<App />} />
       <Route path="/blocks" element={<Blocks />} />
+      <Route path="/conduct-transaction" element={<ConductTransaction />} />
     </Routes>
   </BrowserRouter>
 );
