@@ -31,8 +31,6 @@ class Block extends Component {
               </div>
             ))
           }
-
-          {/* {JSON.stringify(data)} */}
           <br />
           <Button
             variant="danger"
