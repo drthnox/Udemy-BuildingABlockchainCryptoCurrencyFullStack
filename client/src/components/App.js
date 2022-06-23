@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
-import Blocks from './Blocks';
 import logo from '../assets/logo.png';
+import Blocks from '../components/Blocks';
 class App extends Component {
 
   state = { walletInfo: { address: 'foo-addr', balance: 9999 } };
@@ -10,10 +10,12 @@ class App extends Component {
     const api = 'http://localhost:3000/api/wallet-info';
     fetch(api)
       .then(response => response.json())
-      .then(json => this.setState({ walletInfo: json }))
-      // .then(json => console.log('json=',json))
-      ;
+      .then(json => this.setState({ walletInfo: json }));
   }
+
+  // render() {
+  //   return(<div>hello</div>);
+  // }
 
   render() {
     const { address, balance } = this.state.walletInfo;
@@ -25,7 +27,7 @@ class App extends Component {
           <div>Address: {address}</div>
           <div>Balance: {balance}</div>
         </div>
-        <br />
+        <hr />
         <Blocks />
       </div>
     );
