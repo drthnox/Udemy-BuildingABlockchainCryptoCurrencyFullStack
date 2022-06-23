@@ -1,7 +1,8 @@
 import React from 'react';
 import { Component } from 'react';
 import logo from '../assets/logo.png';
-import Blocks from '../components/Blocks';
+import { Link } from "react-router-dom";
+
 class App extends Component {
 
   state = { walletInfo: { address: 'foo-addr', balance: 9999 } };
@@ -13,22 +14,18 @@ class App extends Component {
       .then(json => this.setState({ walletInfo: json }));
   }
 
-  // render() {
-  //   return(<div>hello</div>);
-  // }
-
   render() {
     const { address, balance } = this.state.walletInfo;
     return (
       <div className='App'>
         <img className='logo' src={logo}></img>
         <br />
+        <div><Link to='/blocks'>Blocks</Link></div>
+        <br />
         <div className='WalletInfo'>
           <div>Address: {address}</div>
           <div>Balance: {balance}</div>
         </div>
-        <hr />
-        <Blocks />
       </div>
     );
   }
