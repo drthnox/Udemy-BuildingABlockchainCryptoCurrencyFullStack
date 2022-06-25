@@ -2,6 +2,8 @@ import React from 'react';
 import { Component } from 'react';
 import logo from '../assets/logo.png';
 import { Link } from "react-router-dom";
+import ConductTransaction from './ConductTransaction';
+import Blocks from './Blocks';
 
 class App extends Component {
 
