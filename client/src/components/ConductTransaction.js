@@ -24,16 +24,17 @@ class ConductTransaction extends Component {
     fetch(api,
       {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({recipient, amount})
-      }).then((response) => {response.json()})
-      .then((json) => {
-        alert(json.message || json.type);
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient, amount })
+      })
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        alert(json.type);
       });
   };
 
   render() {
-    console.log('this.state=', this.state);
     return (
       <div className='ConductTransaction'>
         <Link to='/'>Home</Link>
