@@ -24,11 +24,11 @@ describe('TransactionPool', () => {
     });
   });
 
-  describe('existingTransaction()', () => {
+  describe('transactionExists()', () => {
     it('returns an existing transaction given an input address', () => {
       transactionPool.setTransaction(transaction);
 
-      expect(transactionPool.existingTransaction({ inputAddress: senderWallet.publicKey })).toBe(transaction);
+      expect(transactionPool.transactionExists({ inputAddress: senderWallet.publicKey })).toBe(transaction);
     });
   });
 

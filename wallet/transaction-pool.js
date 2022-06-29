@@ -17,7 +17,7 @@ class TransactionPool {
     this.transactionMap = transactionMap;
   }
 
-  existingTransaction({ inputAddress }) {
+  transactionExists({ inputAddress }) {
     const transactions = Object.values(this.transactionMap);
 
     return transactions.find(transaction => transaction.input.address === inputAddress);
