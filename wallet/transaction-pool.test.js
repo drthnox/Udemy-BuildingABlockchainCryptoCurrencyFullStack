@@ -3,6 +3,31 @@ const Transaction = require('./transaction');
 const Wallet = require('./index');
 const Blockchain = require('../blockchain');
 
+const createValidTransactionPool = ({transactionPool: _transactionPool, senderWallet: _senderWallet}) => {
+  let _transaction;
+  let _validTransactions = [];
+
+  for (let i=0; i<10; i++) {
+    _transaction = new Transaction({
+      senderWallet: _senderWallet,
+      recipient: 'any-recipient',
+      amount: 30
+    });
+
+    if (i%3===0) {
+      _transaction.input.amount = 999999;
+    } else if (i%3===1) {
+      _transaction.input.signature = new Wallet().sign('foo');
+    } else {
+      _validTransactions.push(_transaction);
+    }
+
+    _transactionPool.setTransaction(_transaction);
+  }
+
+  return { _transactionPool, _validTransactions };
+}
+
 describe('TransactionPool', () => {
   let transactionPool, transaction, senderWallet;
 
@@ -42,25 +67,31 @@ describe('TransactionPool', () => {
       validTransactions = [];
       errorMock = jest.fn();
       global.console.error = errorMock;
+      let retVal = createValidTransactionPool({transactionPool, senderWallet});
+      transactionPool = retVal._transactionPool;
+      validTransactions = retVal._validTransactions;
+      // for (let i=0; i<10; i++) {
+      //   transaction = new Transaction({
+      //     senderWallet,
+      //     recipient: 'any-recipient',
+      //     amount: 30
+      //   });
 
-      for (let i=0; i<10; i++) {
-        transaction = new Transaction({
-          senderWallet,
-          recipient: 'any-recipient',
-          amount: 30
-        });
+      //   if (i%3===0) {
+      //     transaction.input.amount = 999999;
+      //   } else if (i%3===1) {
+      //     transaction.input.signature = new Wallet().sign('foo');
+      //   } else {
+      //     validTransactions.push(transaction);
+      //   }
 
-        if (i%3===0) {
-          transaction.input.amount = 999999;
-        } else if (i%3===1) {
-          transaction.input.signature = new Wallet().sign('foo');
-        } else {
-          validTransactions.push(transaction);
-        }
+      //   transactionPool.setTransaction(transaction);
+      // }
 
-        transactionPool.setTransaction(transaction);
-      }
+
     });
+
+
 
     it('returns valid transaction', () => {
       expect(transactionPool.validTransactions()).toEqual(validTransactions);
