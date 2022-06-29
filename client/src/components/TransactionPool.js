@@ -2,7 +2,6 @@ import React from 'react';
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Transaction from './Transaction';
-// import { FormGroup, Button, FormControl } from 'react-bootstrap';
 
 class TransactionPool extends Component {
 
@@ -14,10 +13,11 @@ class TransactionPool extends Component {
 
   fetchTransactionPoolMap = () => {
     const api = "http://localhost:3000/api/transaction-pool-map";
-    fetch(api, {
+    const requestOptions = {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
-    })
+    };
+    fetch(api, requestOptions)
       .then(response => response.json())
       .then(json => this.setState({ transactionPoolMap: json }))
       ;
@@ -33,10 +33,12 @@ class TransactionPool extends Component {
         {
           Object.values(this.state.transactionPoolMap)
             .map(transaction => {
-              <div key={transaction.id}>
-                <hr />
-                <Transaction transaction={transaction} />
-              </div>
+              return(
+                <div key={transaction.id}>
+                  <hr />
+                  <Transaction transaction={transaction} />
+                </div>
+              );
             })
         }
       </div>
