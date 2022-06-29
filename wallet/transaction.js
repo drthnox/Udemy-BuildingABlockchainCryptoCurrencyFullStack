@@ -41,6 +41,10 @@ class Transaction {
     return outputMap;
   }
 
+  static validTransaction(transaction) {
+    return this.validate(transaction);
+  }
+
   static validate(transaction) {
     const { input, outputMap } = transaction;
     const { address, amount, signature } = input;

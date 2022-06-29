@@ -29,7 +29,7 @@ class Wallet {
       recipient: recipient,
       amount: amount
     });
-    console.log('wallet created new transaction', txn);
+    console.log('wallet created', txn);
     return txn;
   }
 
