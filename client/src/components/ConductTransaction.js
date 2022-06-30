@@ -2,6 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 import { FormGroup, Button, FormControl } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import history from '../history';
 
 class ConductTransaction extends Component {
 
@@ -28,7 +29,11 @@ class ConductTransaction extends Component {
 
     fetch(api, requestOptions)
       .then(response => response.json())
-      .then(json => alert(json.type));
+      .then(json => {
+        alert(json.type);
+        history.push('/transaction-pool');
+        history.go(0);
+      });
   };
 
   render() {
