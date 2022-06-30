@@ -20,7 +20,7 @@ class ConductTransaction extends Component {
 
   conductTransaction = () => {
     const { recipient, amount } = this.state;
-    const api = "http://localhost:3000/api/transact";
+    const api = `${document.location.origin}/api/transact`;
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

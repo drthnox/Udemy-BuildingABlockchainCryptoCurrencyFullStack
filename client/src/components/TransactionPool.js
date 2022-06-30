@@ -1,7 +1,11 @@
 import React from 'react';
 import { Component } from 'react';
+import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Transaction from './Transaction';
+import history from '../history';
+
+const POLL_INTERVAL_MS = 10000;
 
 class TransactionPool extends Component {
 
@@ -9,10 +13,18 @@ class TransactionPool extends Component {
 
   componentDidMount() {
     this.fetchTransactionPoolMap();
+    this.fetchTransactionPoolMapInterval = setInterval(() => {
+      this.fetchTransactionPoolMap(),
+      POLL_INTERVAL_MS
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.fetchTransactionPoolMapInterval);
   }
 
   fetchTransactionPoolMap = () => {
-    const api = "http://localhost:3000/api/transaction-pool-map";
+    const api = `${document.location.origin}/api/transaction-pool-map`;
     const requestOptions = {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
@@ -23,9 +35,25 @@ class TransactionPool extends Component {
       ;
   }
 
-  render() {
-    console.log('render(): values=', Object.values(this.state.transactionPoolMap));
+  fetchMineTransactions = () => {
+    const api = `${document.location.origin}/api/mine-transaction`;
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' }
+    };
+    fetch(api, requestOptions)
+      .then(response => {
+        if(response.status == 200) {
+          alert('success');
+          history.push('/blocks');
+          history.go(0);
+        } else {
+          alert('The mine-transactions block did not complete');
+        }
+      });
+  }
 
+  render() {
     return (
       <div className='TransactionPool'>
         <div><Link to='/'>Home</Link></div>
@@ -41,6 +69,10 @@ class TransactionPool extends Component {
               );
             })
         }
+        <hr />
+        <Button variant="danger" onClick={this.fetchMineTransactions}>
+          Mine Transaction
+        </Button>
       </div>
     );
   }

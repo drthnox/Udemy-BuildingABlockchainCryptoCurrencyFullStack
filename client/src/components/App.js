@@ -10,7 +10,7 @@ class App extends Component {
   state = { walletInfo: { address: 'foo-addr', balance: 9999 } };
 
   componentDidMount() {
-    const api = 'http://localhost:3000/api/wallet-info';
+    const api = `${document.location.origin}/api/wallet-info`;
     fetch(api)
       .then(response => response.json())
       .then(json => this.setState({ walletInfo: json }));
