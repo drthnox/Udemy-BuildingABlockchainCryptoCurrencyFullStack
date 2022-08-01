@@ -4,11 +4,12 @@ const { CHANNELS } = require('../config');
 
 class PubSub {
 
-  constructor({ blockchain, transactionPool }) {
+  constructor({ blockchain, transactionPool, redisUrl }) {
     this.blockchain = blockchain;
     this.transactionPool = transactionPool;
-    this.subscriber = redis.createClient();
-    this.publisher = redis.createClient();
+    console.log('Using redisUrl', redisUrl);
+    this.subscriber = redis.createClient(redisUrl);
+    this.publisher = redis.createClient(redisUrl);
     this.init();
   }
 
