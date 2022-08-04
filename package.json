@@ -52,6 +52,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
+    "redis": "^3.0.2",
     "redis-mock": "^0.56.3",
     "request": "^2.88.2",
     "should": "^13.2.3",
